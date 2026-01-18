@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/neryangel/workflow-editor/compare/v1.1.0...v1.2.0) (2026-01-18)
+
+### Features
+
+- add multi-modal support to Gemini node (text + image input) ([a75918e](https://github.com/neryangel/workflow-editor/commit/a75918e1a641ccf1c5c524fe1ce4fdd9ebbec2c0))
+
 # [1.1.0](https://github.com/neryangel/workflow-editor/compare/v1.0.0...v1.1.0) (2026-01-18)
 
 ### Features
