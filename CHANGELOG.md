@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/neryangel/workflow-editor/compare/v1.0.0...v1.1.0) (2026-01-18)
+
+### Features
+
+- enterprise hardening - refactor WorkflowCanvas, add cancellation, fix race conditions ([9794eaf](https://github.com/neryangel/workflow-editor/commit/9794eaff618e20123f8bbc7ffb377332b0a7acd6))
+
 # 1.0.0 (2026-01-18)
 
 ### Bug Fixes
