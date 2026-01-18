@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/neryangel/workflow-editor/compare/v1.2.0...v1.3.0) (2026-01-18)
+
+### Features
+
+- add SystemPrompt + Upscaler nodes, enhance Gen-4 and Gemini inputs ([9a16077](https://github.com/neryangel/workflow-editor/commit/9a160775aad165bae034525a396a31571ffaf89f))
+
 # [1.2.0](https://github.com/neryangel/workflow-editor/compare/v1.1.0...v1.2.0) (2026-01-18)
 
 ### Features
