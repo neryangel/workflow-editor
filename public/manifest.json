@@ -1,0 +1,23 @@
+{
+  "name": "Workflow Editor",
+  "short_name": "Workflow",
+  "description": "AI-powered visual workflow editor for creative automation",
+  "start_url": "/workflows/new",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#22c55e",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "utilities", "design"]
+}

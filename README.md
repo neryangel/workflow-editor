@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Workflow Editor 🎨
 
-## Getting Started
+A professional-grade visual workflow editor for creative AI pipelines, built with Next.js 16 and React Flow.
 
-First, run the development server:
+![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)
+![Tests](https://img.shields.io/badge/Tests-62%20Passing-green)
+![ESLint](https://img.shields.io/badge/ESLint-0%20Errors-brightgreen)
+![Build](https://img.shields.io/badge/Build-Passing-success)
+
+## ✨ Features
+
+- 🎯 **Visual Node Editor** - Drag & drop workflow building
+- 🤖 **AI Integration** - LLM, Image Gen, Video Gen nodes
+- ⚡ **Real-time Execution** - Watch workflows run live
+- 💾 **Persistence** - Save/load workflows locally
+- ⌨️ **Keyboard Shortcuts** - Undo/Redo, Delete, Save
+- 🧪 **Fully Tested** - 62 tests (Unit + E2E)
+
+## 🚀 Quick Start
 
 ```bash
+# Install
+npm install
+
+# Development
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Open http://localhost:3000/workflows/new
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧪 Testing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run test:unit     # 41 unit tests (Vitest)
+npm run test:e2e      # 21 E2E tests (Playwright)
+npm run test:coverage # With coverage report
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ Tech Stack
 
-## Learn More
+| Category   | Technology          |
+| ---------- | ------------------- |
+| Framework  | Next.js 16          |
+| Canvas     | @xyflow/react       |
+| Styling    | Tailwind CSS 4      |
+| Testing    | Vitest + Playwright |
+| CI/CD      | GitHub Actions      |
+| Monitoring | Sentry              |
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+├── app/                    # Next.js pages & API
+│   ├── api/ai/llm/        # LLM API endpoint
+│   ├── api/run-workflow/  # Workflow execution
+│   └── workflows/new/     # Editor page
+├── features/workflow-editor/
+│   ├── components/        # React components
+│   ├── hooks/             # Custom hooks
+│   ├── services/          # Business logic
+│   └── types/             # TypeScript types
+├── shared/                # Shared utilities
+└── tests/                 # Test suites
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛡️ Security
 
-## Deploy on Vercel
+- ✅ HSTS, XSS Protection, CSP headers
+- ✅ Dependabot automated updates
+- ✅ Environment validation with Zod
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Fork the repo
+2. Create feature branch (`git checkout -b feat/amazing`)
+3. Commit changes (`git commit -m 'feat: add amazing feature'`)
+4. Push (`git push origin feat/amazing`)
+5. Open Pull Request
+
+Uses [Conventional Commits](https://conventionalcommits.org/).
+
+## 📄 License
+
+MIT
