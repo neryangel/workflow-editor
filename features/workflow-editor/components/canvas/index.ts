@@ -1,2 +1,3 @@
 // Canvas components barrel export
-export { WorkflowEditor as WorkflowCanvas } from "./WorkflowCanvas";
+export { WorkflowCanvas, WorkflowEditor } from './WorkflowCanvas';
+export { WorkflowRunButton } from './WorkflowRunButton';
