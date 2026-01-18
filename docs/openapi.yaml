@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+    title: Workflow Editor API
+    description: API for visual workflow editor with AI capabilities
+    version: 1.0.0
+    contact:
+        name: API Support
+
+servers:
+    - url: http://localhost:3000
+      description: Development server
+
+paths:
+    /api/health:
+        get:
+            summary: Health check
+            tags: [System]
+            responses:
+                '200':
+                    description: Service is healthy
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HealthResponse'
+
+    /api/ai/llm:
+        post:
+            summary: Generate text with LLM
+            tags: [AI]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LLMRequest'
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LLMResponse'
+                '400':
+                    description: Invalid request
+
+    /api/run-workflow:
+        post:
+            summary: Execute a workflow
+            tags: [Workflow]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RunWorkflowRequest'
+            responses:
+                '200':
+                    description: Workflow executed successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RunWorkflowResponse'
+                '400':
+                    description: Invalid workflow
+
+components:
+    schemas:
+        HealthResponse:
+            type: object
+            properties:
+                status:
+                    type: string
+                    enum: [healthy, degraded, unhealthy]
+                timestamp:
+                    type: string
+                    format: date-time
+                version:
+                    type: string
+
+        LLMRequest:
+            type: object
+            required: [prompt]
+            properties:
+                prompt:
+                    type: string
+                    minLength: 1
+                    maxLength: 10000
+                systemPrompt:
+                    type: string
+                    maxLength: 5000
+
+        LLMResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                text:
+                    type: string
+                mock:
+                    type: boolean
+
+        RunWorkflowRequest:
+            type: object
+            required: [nodes, edges]
+            properties:
+                nodes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WorkflowNode'
+                    maxItems: 100
+                edges:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/WorkflowEdge'
+                    maxItems: 500
+
+        WorkflowNode:
+            type: object
+            required: [id, type, data]
+            properties:
+                id:
+                    type: string
+                type:
+                    type: string
+                position:
+                    type: object
+                    properties:
+                        x:
+                            type: number
+                        y:
+                            type: number
+                data:
+                    type: object
+
+        WorkflowEdge:
+            type: object
+            required: [id, source, target]
+            properties:
+                id:
+                    type: string
+                source:
+                    type: string
+                target:
+                    type: string
+
+        RunWorkflowResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                error:
+                    type: string
