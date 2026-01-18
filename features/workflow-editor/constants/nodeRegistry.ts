@@ -68,6 +68,20 @@ export const NODE_REGISTRY: NodeTypeDefinition[] = [
             },
         },
     },
+    {
+        type: 'systemPrompt',
+        label: 'System Prompt',
+        description: 'System instructions for LLM',
+        category: 'input',
+        defaultData: {
+            label: 'System Prompt',
+            status: 'idle',
+            inputs: {},
+            outputs: {
+                out_text: { type: 'text' },
+            },
+        },
+    },
 
     // === MEDIA MODELS ===
     {
@@ -141,6 +155,25 @@ export const NODE_REGISTRY: NodeTypeDefinition[] = [
             },
             meta: {
                 timestamp: 0,
+            },
+        },
+    },
+    {
+        type: 'upscaler',
+        label: 'Upscaler',
+        description: 'Upscale image 2x/4x',
+        category: 'models',
+        defaultData: {
+            label: 'Upscaler',
+            status: 'idle',
+            inputs: {
+                in_image: { type: 'image' },
+            },
+            outputs: {
+                out_image: { type: 'image' },
+            },
+            meta: {
+                scale: 2,
             },
         },
     },

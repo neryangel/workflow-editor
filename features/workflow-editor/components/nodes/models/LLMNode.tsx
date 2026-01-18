@@ -165,6 +165,7 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                         { id: 'in_system', type: 'text', label: 'system' },
                         { id: 'in_text', type: 'text', label: 'text' },
                         { id: 'in_image', type: 'image', label: 'image' },
+                        { id: 'in_video', type: 'video', label: 'video' },
                     ]}
                     outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}
                 />

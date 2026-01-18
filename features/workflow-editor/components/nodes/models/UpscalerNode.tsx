@@ -5,16 +5,15 @@ import { NodeProps, useReactFlow, useEdges } from '@xyflow/react';
 import { BaseNode } from '../base/BaseNode';
 import { HandleRow } from '../base/NodeHandle';
 import { NodeData } from '../../../types';
-import { PORT_COLORS } from '../../../constants';
-import { Loader2, Play } from 'lucide-react';
+import { Loader2, ZoomIn } from 'lucide-react';
 
-function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
+function UpscalerNodeComponent({ id, data, selected }: NodeProps) {
     const { getNodes, setNodes } = useReactFlow();
     const edges = useEdges();
     const [isRunning, setIsRunning] = useState(false);
     const nodeData = data as unknown as NodeData;
-    const outputValue = nodeData.outputs?.out_video?.value as string | undefined;
-    const videoColor = PORT_COLORS.video;
+    const outputValue = nodeData.outputs?.out_image?.value as string | undefined;
+    const scale = (nodeData.meta?.scale as number) || 2;
 
     const getInputsFromConnections = useCallback(() => {
         const inputs: Record<string, unknown> = {};
@@ -48,11 +47,20 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
         );
 
         try {
-            const _inputs = getInputsFromConnections();
-            await new Promise((resolve) => setTimeout(resolve, 2000 + Math.random() * 1000));
+            const inputs = getInputsFromConnections();
+            const inputImage = inputs.in_image as string | undefined;
 
-            const videoUrl =
-                'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4';
+            if (!inputImage) {
+                throw new Error('No input image provided');
+            }
+
+            // Simulate upscaling (in production this would call a real API)
+            await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 500));
+
+            // For demo, we'll just pass through the image with an upscale indicator
+            const upscaledUrl = inputImage.includes('?')
+                ? `${inputImage}&upscale=${scale}x`
+                : `${inputImage}?upscale=${scale}x`;
 
             setNodes((nodes) =>
                 nodes.map((node) => {
@@ -65,9 +73,9 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
                             status: 'success',
                             outputs: {
                                 ...currentData.outputs,
-                                out_video: {
-                                    ...currentData.outputs.out_video,
-                                    value: videoUrl,
+                                out_image: {
+                                    ...currentData.outputs.out_image,
+                                    value: upscaledUrl,
                                 },
                             },
                         },
@@ -75,7 +83,7 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
                 })
             );
         } catch (error) {
-            console.error('Node execution failed:', error);
+            console.error('Upscale failed:', error);
             setNodes((nodes) =>
                 nodes.map((node) =>
                     node.id === id
@@ -84,7 +92,7 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
                               data: {
                                   ...node.data,
                                   status: 'error',
-                                  error: 'Execution failed',
+                                  error: 'Upscale failed',
                               },
                           }
                         : node
@@ -93,7 +101,7 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
         } finally {
             setIsRunning(false);
         }
-    }, [id, setNodes, getInputsFromConnections]);
+    }, [id, setNodes, getInputsFromConnections, scale]);
 
     return (
         <BaseNode
@@ -104,68 +112,65 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
         >
             <div className="flex flex-col gap-3">
                 <div
-                    className="aspect-video rounded-lg border-2 overflow-hidden min-h-[120px] flex items-center justify-center bg-black"
+                    className="aspect-video rounded-lg border-2 overflow-hidden min-h-[80px] flex items-center justify-center"
                     style={{
-                        borderColor:
-                            nodeData.status === 'success' ? `${videoColor}50` : 'transparent',
+                        borderColor: nodeData.status === 'success' ? '#ec489950' : 'transparent',
+                        backgroundColor: '#0f172a',
                     }}
                 >
                     {nodeData.status === 'running' || isRunning ? (
                         <div className="text-center">
-                            <Loader2
-                                className="w-8 h-8 mx-auto mb-2 animate-spin"
-                                style={{ color: videoColor }}
-                            />
-                            <p className="text-xs" style={{ color: videoColor }}>
-                                Generating video...
-                            </p>
+                            <Loader2 className="w-6 h-6 mx-auto mb-1 animate-spin text-slate-500" />
+                            <p className="text-xs text-slate-500">Upscaling {scale}x...</p>
                         </div>
                     ) : outputValue ? (
-                        <video
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
                             src={outputValue}
-                            controls
-                            className="w-full h-full object-contain"
+                            alt="Upscaled"
+                            className="w-full h-full object-cover"
                         />
                     ) : (
-                        <p className="text-xs text-slate-600">Output will appear here</p>
+                        <p className="text-xs text-slate-600">Upscaled image here</p>
                     )}
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <ZoomIn className="w-3.5 h-3.5" />
+                    <span>Scale: {scale}x</span>
                 </div>
 
                 <button
                     onClick={handleRunNode}
                     disabled={isRunning}
                     className={`w-full py-2 px-3 text-sm font-medium rounded-lg border
-                        flex items-center justify-center gap-2 transition-colors
-                        ${
-                            isRunning
-                                ? 'bg-slate-700 border-slate-600 text-slate-400 cursor-wait'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-600'
-                        }`}
+                      flex items-center justify-center gap-2 transition-colors
+                      ${
+                          isRunning
+                              ? 'bg-slate-700 border-slate-600 text-slate-400 cursor-wait'
+                              : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-600'
+                      }`}
                 >
                     {isRunning ? (
                         <>
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Generating...
+                            Upscaling...
                         </>
                     ) : (
                         <>
-                            <Play className="w-3.5 h-3.5" />
-                            Run
+                            <ZoomIn className="w-3.5 h-3.5" />
+                            Upscale
                         </>
                     )}
                 </button>
 
                 <HandleRow
-                    inputs={[
-                        { id: 'in_text', type: 'text', label: 'text' },
-                        { id: 'in_image', type: 'image', label: 'image' },
-                        { id: 'in_audio', type: 'audio', label: 'audio' },
-                    ]}
-                    outputs={[{ id: 'out_video', type: 'video', label: 'video' }]}
+                    inputs={[{ id: 'in_image', type: 'image', label: 'image' }]}
+                    outputs={[{ id: 'out_image', type: 'image', label: 'image' }]}
                 />
             </div>
         </BaseNode>
     );
 }
 
-export const VideoGenNode = memo(VideoGenNodeComponent);
+export const UpscalerNode = memo(UpscalerNodeComponent);
