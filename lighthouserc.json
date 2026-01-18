@@ -2,7 +2,7 @@
     "ci": {
         "collect": {
             "startServerCommand": "npm run start",
-            "startServerReadyPattern": "Ready",
+            "startServerReadyPattern": "Ready in",
             "url": ["http://localhost:3000/workflows/new"],
             "numberOfRuns": 3
         },
