@@ -1,3 +1,21 @@
+# 1.0.0 (2026-01-18)
+
+### Bug Fixes
+
+- **ci:** upgrade Node.js to 22 for semantic-release, update Lighthouse action ([a271928](https://github.com/neryangel/workflow-editor/commit/a2719287a85b9ef40174e1fc550ac70bdb0391bc))
+- redirect home page to workflow editor ([7385d33](https://github.com/neryangel/workflow-editor/commit/7385d331ecda6f6cfd0139660a3ab24bca35b8be))
+- update Lighthouse pattern for Next.js 16 ([3e2548b](https://github.com/neryangel/workflow-editor/commit/3e2548b2e6da2ee7edbc103594fc24342c9ff767))
+
+### Features
+
+- add enterprise-grade features ([69bc659](https://github.com/neryangel/workflow-editor/commit/69bc659486304711824962a5a04cd62106ca80ed))
+- add health check API and retry utility ([3ce5a92](https://github.com/neryangel/workflow-editor/commit/3ce5a924abaf88e5a156d271a1b62a5603f60f25))
+- add i18n, OpenAPI spec, load testing, and more tests ([da29d9b](https://github.com/neryangel/workflow-editor/commit/da29d9b1b4be9792e22cef896ea502af89327e41))
+- add logger and performance monitoring utilities ([0bab05f](https://github.com/neryangel/workflow-editor/commit/0bab05ff3fc2034f980ceb30f36edf955f5857fa))
+- add rate limiter and API documentation ([246cccb](https://github.com/neryangel/workflow-editor/commit/246cccbe5addc273d12352287115b659619279fa))
+- add security utilities ([813be29](https://github.com/neryangel/workflow-editor/commit/813be290e56bf0bfa178209d303714c2a4b337c1))
+- add validation utilities ([1ac1b74](https://github.com/neryangel/workflow-editor/commit/1ac1b74e8e3785c6051b11c92b141b22e583a5d2))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
