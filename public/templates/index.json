@@ -40,6 +40,14 @@
             "file": "video-creator.json",
             "complexity": "advanced",
             "nodeCount": 7
+        },
+        {
+            "id": "face-reference-generator",
+            "name": "🎨 Face Reference Generator",
+            "description": "Generate images with consistent faces. Connect 2 face photos + scene description → AI creates prompt → Image generation.",
+            "file": "face-reference-generator.json",
+            "complexity": "intermediate",
+            "nodeCount": 6
         }
     ]
 }

@@ -1,0 +1,211 @@
+{
+    "name": "🎨 Face Reference Generator",
+    "description": "Generate images with consistent faces. Connect 2 face photos + scene description → AI creates production-ready prompt → Image generation.",
+    "nodes": [
+        {
+            "id": "scene-text",
+            "type": "inputText",
+            "position": {
+                "x": 50,
+                "y": 50
+            },
+            "data": {
+                "label": "Scene Description",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "הרב עם הגלימה הלבנה מברך את האיש עם הכובע. הם נמצאים בבית כנסת עתיק ומפואר"
+                    }
+                }
+            }
+        },
+        {
+            "id": "face-1",
+            "type": "inputImage",
+            "position": {
+                "x": 50,
+                "y": 250
+            },
+            "data": {
+                "label": "Face 1 (Main Character)",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "face-2",
+            "type": "inputImage",
+            "position": {
+                "x": 50,
+                "y": 500
+            },
+            "data": {
+                "label": "Face 2 (Supporting)",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "prompt-engineer",
+            "type": "llm",
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "data": {
+                "label": "Prompt Engineer",
+                "status": "idle",
+                "inputs": {
+                    "in_system": {
+                        "type": "text"
+                    },
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image_1": {
+                        "type": "image"
+                    },
+                    "in_image_2": {
+                        "type": "image"
+                    },
+                    "in_image_3": {
+                        "type": "image"
+                    },
+                    "in_video": {
+                        "type": "video"
+                    }
+                },
+                "outputs": {
+                    "out_text": {
+                        "type": "text"
+                    }
+                },
+                "meta": {
+                    "model": "gemini-2.5-flash-preview-05-20",
+                    "personaId": "promptEngineer"
+                }
+            }
+        },
+        {
+            "id": "image-gen",
+            "type": "imageGen",
+            "position": {
+                "x": 750,
+                "y": 200
+            },
+            "data": {
+                "label": "Nano Banana Pro",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                },
+                "meta": {
+                    "model": "nano-banana-pro"
+                }
+            }
+        },
+        {
+            "id": "output-final",
+            "type": "output",
+            "position": {
+                "x": 1050,
+                "y": 200
+            },
+            "data": {
+                "label": "Final Output",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    },
+                    "in_video": {
+                        "type": "video"
+                    }
+                },
+                "outputs": {}
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "e-text-to-llm",
+            "source": "scene-text",
+            "target": "prompt-engineer",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e-face1-to-llm",
+            "source": "face-1",
+            "target": "prompt-engineer",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image_1",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e-face2-to-llm",
+            "source": "face-2",
+            "target": "prompt-engineer",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image_2",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e-llm-to-imagegen",
+            "source": "prompt-engineer",
+            "target": "image-gen",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e-imagegen-to-output",
+            "source": "image-gen",
+            "target": "output-final",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        }
+    ]
+}
