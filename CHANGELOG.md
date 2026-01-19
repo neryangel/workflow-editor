@@ -1,3 +1,9 @@
+# [1.6.0](https://github.com/neryangel/workflow-editor/compare/v1.5.0...v1.6.0) (2026-01-19)
+
+### Features
+
+- implement AI model manager architecture ([eecdd61](https://github.com/neryangel/workflow-editor/commit/eecdd611a979194ce4384afc567af41e2e715347))
+
 # [1.5.0](https://github.com/neryangel/workflow-editor/compare/v1.4.0...v1.5.0) (2026-01-19)
 
 ### Features
