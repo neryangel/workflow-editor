@@ -1,3 +1,9 @@
+# [1.5.0](https://github.com/neryangel/workflow-editor/compare/v1.4.0...v1.5.0) (2026-01-19)
+
+### Features
+
+- add Vision support and real Image Generation API ([a66eab4](https://github.com/neryangel/workflow-editor/commit/a66eab4912be798b1119111370b82485adce72a3))
+
 # [1.4.0](https://github.com/neryangel/workflow-editor/compare/v1.3.0...v1.4.0) (2026-01-19)
 
 ### Features
