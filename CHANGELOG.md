@@ -1,3 +1,9 @@
+# [1.10.0](https://github.com/neryangel/workflow-editor/compare/v1.9.1...v1.10.0) (2026-01-19)
+
+### Features
+
+- add multi-image support for LLM node ([b8bfd9b](https://github.com/neryangel/workflow-editor/commit/b8bfd9b60f3ab7613f02352ce73a0af55be93dd0))
+
 ## [1.9.1](https://github.com/neryangel/workflow-editor/compare/v1.9.0...v1.9.1) (2026-01-19)
 
 ### Bug Fixes
