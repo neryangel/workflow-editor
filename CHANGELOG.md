@@ -1,3 +1,9 @@
+# [1.11.0](https://github.com/neryangel/workflow-editor/compare/v1.10.3...v1.11.0) (2026-01-19)
+
+### Features
+
+- switch to Gemini 2.0 Flash for image generation with reference image support ([08ef43d](https://github.com/neryangel/workflow-editor/commit/08ef43d8d41b705a3d27a1df9f6d784372939c8c))
+
 ## [1.10.3](https://github.com/neryangel/workflow-editor/compare/v1.10.2...v1.10.3) (2026-01-19)
 
 ### Bug Fixes
