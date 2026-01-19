@@ -64,6 +64,7 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                     systemPrompt: systemText || undefined,
                     imageUrl,
                     videoUrl,
+                    model: (nodeData.meta?.model as string) || 'gemini-2.0-flash',
                 }),
             });
 
@@ -139,41 +140,66 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                         <p className="text-slate-600">Output will appear here</p>
                     )}
                 </div>
+            </div>
+
+            <div className="flex gap-2">
+                <select
+                    className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300 outline-none focus:border-blue-500"
+                    value={(nodeData.meta?.model as string) || 'gemini-2.0-flash'}
+                    onChange={(e) => {
+                        setNodes((nodes) =>
+                            nodes.map((node) =>
+                                node.id === id
+                                    ? {
+                                          ...node,
+                                          data: {
+                                              ...node.data,
+                                              meta: {
+                                                  ...(node.data.meta || {}),
+                                                  model: e.target.value,
+                                              },
+                                          },
+                                      }
+                                    : node
+                            )
+                        );
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                >
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (Vision & Gen)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Reasoning)</option>
+                    <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Coding)</option>
+                    <option value="gpt-4o">GPT-4o (General)</option>
+                </select>
 
                 <button
                     onClick={handleRunNode}
-                    disabled={isRunning}
-                    className={`w-full py-2 px-3 text-sm font-medium rounded-lg border
-                        flex items-center justify-center gap-2 transition-colors
-                        ${
-                            isRunning
-                                ? 'bg-slate-700 border-slate-600 text-slate-400 cursor-wait'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-600'
-                        }`}
+                    disabled={nodeData.status === 'running' || isRunning}
+                    className={`px-3 py-1.5 rounded flex items-center gap-2 text-xs font-medium transition-colors ${
+                        nodeData.status === 'running' || isRunning
+                            ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                            : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-600'
+                    }`}
+                    onPointerDown={(e) => e.stopPropagation()}
                 >
-                    {isRunning ? (
-                        <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Processing...
-                        </>
+                    {nodeData.status === 'running' || isRunning ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
                     ) : (
-                        <>
-                            <Play className="w-3.5 h-3.5" />
-                            Run
-                        </>
+                        <Play className="w-3 h-3" />
                     )}
+                    Run
                 </button>
-
-                <HandleRow
-                    inputs={[
-                        { id: 'in_system', type: 'text', label: 'system' },
-                        { id: 'in_text', type: 'text', label: 'text' },
-                        { id: 'in_image', type: 'image', label: 'image' },
-                        { id: 'in_video', type: 'video', label: 'video' },
-                    ]}
-                    outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}
-                />
             </div>
+
+            <HandleRow
+                inputs={[
+                    { id: 'in_system', type: 'text', label: 'system' },
+                    { id: 'in_text', type: 'text', label: 'text' },
+                    { id: 'in_image', type: 'image', label: 'image' },
+                    { id: 'in_video', type: 'video', label: 'video' },
+                ]}
+                outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}
+            />
         </BaseNode>
     );
 }

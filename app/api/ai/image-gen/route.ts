@@ -10,6 +10,7 @@ const imageGenRequestSchema = z.object({
     prompt: z.string().min(1, 'Prompt is required').max(5000),
     referenceImageUrl: z.string().url().optional(),
     referenceImageBase64: z.string().optional(),
+    model: z.string().optional(),
 });
 
 // Helper to fetch image and convert to base64
@@ -40,7 +41,10 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { prompt, referenceImageUrl, referenceImageBase64 } = parseResult.data;
+        const { prompt, referenceImageUrl, referenceImageBase64, model } = parseResult.data;
+
+        // Log chosen model (Mapping strategy: Imagen 3/4/Nano -> Gemini Gen, Flux -> External)
+        console.log(`[ImageGen] Generating with model: ${model || 'default (imagen-3-fast)'}`);
 
         if (!GEMINI_API_KEY) {
             // Fallback to mock response with placeholder image
