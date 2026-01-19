@@ -1,3 +1,9 @@
+# [1.9.0](https://github.com/neryangel/workflow-editor/compare/v1.8.1...v1.9.0) (2026-01-19)
+
+### Features
+
+- integrate prompt composer with persona system ([047b500](https://github.com/neryangel/workflow-editor/commit/047b5001126ca7b5c692bad378ca4a74023bf841))
+
 ## [1.8.1](https://github.com/neryangel/workflow-editor/compare/v1.8.0...v1.8.1) (2026-01-19)
 
 ### Bug Fixes
