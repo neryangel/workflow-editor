@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/neryangel/workflow-editor/compare/v1.3.0...v1.4.0) (2026-01-19)
+
+### Features
+
+- add 5 complex workflow templates ([706df55](https://github.com/neryangel/workflow-editor/commit/706df5571204a410959a2a0d7ecd7787ddacd080))
+
 # [1.3.0](https://github.com/neryangel/workflow-editor/compare/v1.2.0...v1.3.0) (2026-01-18)
 
 ### Features
