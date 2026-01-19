@@ -1,3 +1,9 @@
+## [1.10.2](https://github.com/neryangel/workflow-editor/compare/v1.10.1...v1.10.2) (2026-01-19)
+
+### Bug Fixes
+
+- sync nodeRegistry with LLMNode - add 3 image inputs and fix connection handles ([19a12e0](https://github.com/neryangel/workflow-editor/commit/19a12e0c29a1f0702b53a74b9a7faff38ee19d4e))
+
 ## [1.10.1](https://github.com/neryangel/workflow-editor/compare/v1.10.0...v1.10.1) (2026-01-19)
 
 ### Bug Fixes
