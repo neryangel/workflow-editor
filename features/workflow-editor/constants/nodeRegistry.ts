@@ -95,7 +95,10 @@ export const NODE_REGISTRY: NodeTypeDefinition[] = [
             inputs: {
                 in_system: { type: 'text' },
                 in_text: { type: 'text' },
-                in_image: { type: 'image' },
+                in_image_1: { type: 'image' },
+                in_image_2: { type: 'image' },
+                in_image_3: { type: 'image' },
+                in_video: { type: 'video' },
             },
             outputs: {
                 out_text: { type: 'text' },

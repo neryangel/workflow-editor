@@ -61,12 +61,14 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
             const inputText = (inputs.in_text as string) || '';
             const imageUrl1 = (inputs.in_image_1 as string) || undefined;
             const imageUrl2 = (inputs.in_image_2 as string) || undefined;
+            const imageUrl3 = (inputs.in_image_3 as string) || undefined;
             const videoUrl = (inputs.in_video as string) || undefined;
 
             // Collect all connected images into array
             const imageUrls: string[] = [];
             if (imageUrl1) imageUrls.push(imageUrl1);
             if (imageUrl2) imageUrls.push(imageUrl2);
+            if (imageUrl3) imageUrls.push(imageUrl3);
 
             if (!inputText) {
                 throw new Error('No input text provided');
@@ -312,6 +314,7 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                         { id: 'in_text', type: 'text', label: 'text' },
                         { id: 'in_image_1', type: 'image', label: 'image 1' },
                         { id: 'in_image_2', type: 'image', label: 'image 2' },
+                        { id: 'in_image_3', type: 'image', label: 'image 3' },
                         { id: 'in_video', type: 'video', label: 'video' },
                     ]}
                     outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}
