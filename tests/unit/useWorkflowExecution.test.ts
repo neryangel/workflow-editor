@@ -2,7 +2,7 @@
 // Tests for workflow execution with AbortController and race condition prevention
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useWorkflowExecution } from '@features/workflow-editor/hooks/useWorkflowExecution';
 
 // Mock fetch

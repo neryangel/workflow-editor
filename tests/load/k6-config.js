@@ -20,7 +20,8 @@ export const options = {
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:3000';
 
-export default function () {
+// Named export for K6 load test main function
+export default function runLoadTest() {
     // Health check
     const healthRes = http.get(`${BASE_URL}/api/health`);
     check(healthRes, {
@@ -68,12 +69,14 @@ export function handleSummary(data) {
     };
 }
 
-function textSummary(data, options) {
-    return `
+function textSummary(data, { indent = '', enableColors = false } = {}) {
+    const colorReset = enableColors ? '\x1b[0m' : '';
+    const colorGreen = enableColors ? '\x1b[32m' : '';
+    return `${indent}${colorGreen}
 Load Test Summary
 =================
 Total Requests: ${data.metrics.http_reqs.values.count}
 Request Duration (p95): ${data.metrics.http_req_duration.values['p(95)'].toFixed(2)}ms
 Failed Requests: ${data.metrics.http_req_failed.values.rate * 100}%
-`;
+${colorReset}`;
 }

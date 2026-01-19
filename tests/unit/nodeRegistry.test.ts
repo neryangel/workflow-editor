@@ -6,7 +6,6 @@ import {
     NODE_REGISTRY,
     getNodeDefinition,
     getNodesByCategory,
-    NodeTypeDefinition,
 } from '@features/workflow-editor/constants/nodeRegistry';
 import { WorkflowNodeType, NodeCategory } from '@features/workflow-editor/types';
 

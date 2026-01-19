@@ -112,7 +112,7 @@ function ImageGenNodeComponent({ id, data, selected }: NodeProps) {
         } finally {
             setIsRunning(false);
         }
-    }, [id, setNodes, getInputsFromConnections]);
+    }, [id, setNodes, getInputsFromConnections, nodeData.meta?.model]);
 
     return (
         <BaseNode

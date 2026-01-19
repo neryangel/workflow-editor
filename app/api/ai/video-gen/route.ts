@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
             config: {
                 aspectRatio: aspectRatio || '16:9',
                 numberOfVideos: 1,
+                durationSeconds: duration || 5, // Use duration parameter
             },
         };
 

@@ -2,7 +2,6 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { Node, Edge } from '@xyflow/react';
-import { WorkflowNode, WorkflowEdge } from '../types';
 
 export interface UseWorkflowExecutionOptions {
     onExecutionStart?: () => void;
