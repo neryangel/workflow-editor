@@ -1,3 +1,9 @@
+## [1.10.3](https://github.com/neryangel/workflow-editor/compare/v1.10.2...v1.10.3) (2026-01-19)
+
+### Bug Fixes
+
+- add tolerance to flaky async timing test in CI ([1883adc](https://github.com/neryangel/workflow-editor/commit/1883adca7b65237b192c2a9f9f3993af2ceab054))
+
 ## [1.10.2](https://github.com/neryangel/workflow-editor/compare/v1.10.1...v1.10.2) (2026-01-19)
 
 ### Bug Fixes
