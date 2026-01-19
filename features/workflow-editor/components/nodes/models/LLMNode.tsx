@@ -59,8 +59,14 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
             const inputs = getInputsFromConnections();
             const systemText = (inputs.in_system as string) || '';
             const inputText = (inputs.in_text as string) || '';
-            const imageUrl = (inputs.in_image as string) || undefined;
+            const imageUrl1 = (inputs.in_image_1 as string) || undefined;
+            const imageUrl2 = (inputs.in_image_2 as string) || undefined;
             const videoUrl = (inputs.in_video as string) || undefined;
+
+            // Collect all connected images into array
+            const imageUrls: string[] = [];
+            if (imageUrl1) imageUrls.push(imageUrl1);
+            if (imageUrl2) imageUrls.push(imageUrl2);
 
             if (!inputText) {
                 throw new Error('No input text provided');
@@ -72,7 +78,7 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                 body: JSON.stringify({
                     prompt: inputText,
                     systemPrompt: systemText || undefined,
-                    imageUrl,
+                    imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
                     videoUrl,
                     model: (nodeData.meta?.model as string) || 'gemini-2.5-flash-preview-05-20',
                     personaId: (nodeData.meta?.personaId as string) || undefined,
@@ -304,7 +310,8 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                     inputs={[
                         { id: 'in_system', type: 'text', label: 'system' },
                         { id: 'in_text', type: 'text', label: 'text' },
-                        { id: 'in_image', type: 'image', label: 'image' },
+                        { id: 'in_image_1', type: 'image', label: 'image 1' },
+                        { id: 'in_image_2', type: 'image', label: 'image 2' },
                         { id: 'in_video', type: 'video', label: 'video' },
                     ]}
                     outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}

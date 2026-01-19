@@ -9,7 +9,8 @@ import { z } from 'zod';
 export const llmRequestSchema = z.object({
     prompt: z.string().min(1, 'Prompt is required').max(10000, 'Prompt too long'),
     systemPrompt: z.string().max(5000).optional(),
-    imageUrl: z.string().url().optional(),
+    imageUrl: z.string().url().optional(), // Single image (backward compat)
+    imageUrls: z.array(z.string().url()).max(5).optional(), // Multiple images for character refs
     imageBase64: z.string().optional(),
     videoUrl: z.string().url().optional(),
     model: z.string().optional(),

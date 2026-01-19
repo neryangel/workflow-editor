@@ -48,8 +48,16 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { prompt, systemPrompt, imageUrl, imageBase64, videoUrl, model, personaId } =
-            parseResult.data;
+        const {
+            prompt,
+            systemPrompt,
+            imageUrl,
+            imageUrls,
+            imageBase64,
+            videoUrl,
+            model,
+            personaId,
+        } = parseResult.data;
 
         if (!GEMINI_API_KEY) {
             // Fallback to mock response if no API key
@@ -69,8 +77,11 @@ export async function POST(request: NextRequest) {
             usePersona: !!personaId, // Only use persona if explicitly selected
         });
 
+        // Count total images for logging
+        const allImageUrls = [...(imageUrl ? [imageUrl] : []), ...(imageUrls || [])];
         console.log('[LLM] Using persona:', personaId || 'none');
         console.log('[LLM] System prompt length:', composed.systemPrompt.length);
+        console.log('[LLM] Reference images:', allImageUrls.length);
 
         // Build the request parts for Gemini API
         const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> =
@@ -79,7 +90,7 @@ export async function POST(request: NextRequest) {
         // Add text prompt
         parts.push({ text: composed.userPrompt });
 
-        // Add image if provided (base64 or URL)
+        // Add single image if provided (backward compat)
         if (imageBase64) {
             parts.push({
                 inline_data: {
@@ -96,6 +107,21 @@ export async function POST(request: NextRequest) {
                         data: base64,
                     },
                 });
+            }
+        }
+
+        // Add multiple reference images (for character consistency)
+        if (imageUrls && imageUrls.length > 0) {
+            for (const url of imageUrls) {
+                const base64 = await fetchImageAsBase64(url);
+                if (base64) {
+                    parts.push({
+                        inline_data: {
+                            mime_type: getMimeType(url),
+                            data: base64,
+                        },
+                    });
+                }
             }
         }
 
