@@ -1,3 +1,9 @@
+# [1.13.0](https://github.com/neryangel/workflow-editor/compare/v1.12.0...v1.13.0) (2026-01-19)
+
+### Features
+
+- increase test coverage from 59% to 76% ([91b4503](https://github.com/neryangel/workflow-editor/commit/91b4503d17b3676366334963fb3edfea882aa3f7))
+
 # [1.12.0](https://github.com/neryangel/workflow-editor/compare/v1.11.0...v1.12.0) (2026-01-19)
 
 ### Features
