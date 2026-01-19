@@ -1,0 +1,242 @@
+{
+    "name": "🎥 Video Creator",
+    "description": "Create a video from an image with AI-generated motion and optional audio sync.",
+    "nodes": [
+        {
+            "id": "first-frame-1",
+            "type": "inputImage",
+            "position": {
+                "x": 50,
+                "y": 100
+            },
+            "data": {
+                "label": "First Frame",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "motion-text-1",
+            "type": "inputText",
+            "position": {
+                "x": 50,
+                "y": 350
+            },
+            "data": {
+                "label": "Motion Description",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "slow camera pan to the right, gentle wind moving through hair, soft lighting changes"
+                    }
+                }
+            }
+        },
+        {
+            "id": "audio-1",
+            "type": "inputAudio",
+            "position": {
+                "x": 50,
+                "y": 550
+            },
+            "data": {
+                "label": "Background Music",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_audio": {
+                        "type": "audio"
+                    }
+                }
+            }
+        },
+        {
+            "id": "system-motion-1",
+            "type": "systemPrompt",
+            "position": {
+                "x": 350,
+                "y": 100
+            },
+            "data": {
+                "label": "Motion Director",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "You are a cinematographer. Analyze the image and enhance the motion description to create a cinematic video. Add specific camera movements, timing, and visual transitions. Keep the motion natural and smooth."
+                    }
+                }
+            }
+        },
+        {
+            "id": "gemini-motion-1",
+            "type": "llm",
+            "position": {
+                "x": 350,
+                "y": 350
+            },
+            "data": {
+                "label": "Enhance Motion",
+                "status": "idle",
+                "inputs": {
+                    "in_system": {
+                        "type": "text"
+                    },
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_text": {
+                        "type": "text"
+                    }
+                },
+                "meta": {
+                    "model": "gemini-2.5-flash"
+                }
+            }
+        },
+        {
+            "id": "video-gen-1",
+            "type": "videoGen",
+            "position": {
+                "x": 700,
+                "y": 300
+            },
+            "data": {
+                "label": "Generate Video",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    },
+                    "in_audio": {
+                        "type": "audio"
+                    }
+                },
+                "outputs": {
+                    "out_video": {
+                        "type": "video"
+                    }
+                }
+            }
+        },
+        {
+            "id": "output-video-1",
+            "type": "output",
+            "position": {
+                "x": 1000,
+                "y": 300
+            },
+            "data": {
+                "label": "Final Video",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    },
+                    "in_video": {
+                        "type": "video"
+                    }
+                },
+                "outputs": {}
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "e1",
+            "source": "first-frame-1",
+            "target": "gemini-motion-1",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e2",
+            "source": "motion-text-1",
+            "target": "gemini-motion-1",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e3",
+            "source": "system-motion-1",
+            "target": "gemini-motion-1",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_system",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e4",
+            "source": "gemini-motion-1",
+            "target": "video-gen-1",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e5",
+            "source": "first-frame-1",
+            "target": "video-gen-1",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e6",
+            "source": "audio-1",
+            "target": "video-gen-1",
+            "sourceHandle": "out_audio",
+            "targetHandle": "in_audio",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#eab308"
+            }
+        },
+        {
+            "id": "e7",
+            "source": "video-gen-1",
+            "target": "output-video-1",
+            "sourceHandle": "out_video",
+            "targetHandle": "in_video",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#3b82f6"
+            }
+        }
+    ]
+}

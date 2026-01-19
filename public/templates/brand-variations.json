@@ -1,0 +1,224 @@
+{
+    "name": "🎨 Brand Variations",
+    "description": "Create multiple variations of a brand image with different backgrounds and styles.",
+    "nodes": [
+        {
+            "id": "brand-image-1",
+            "type": "inputImage",
+            "position": {
+                "x": 50,
+                "y": 250
+            },
+            "data": {
+                "label": "Brand/Product Image",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "var-prompt-1",
+            "type": "inputText",
+            "position": {
+                "x": 350,
+                "y": 50
+            },
+            "data": {
+                "label": "Variation 1: Sunset",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "same product, golden sunset background, warm lighting, professional photography"
+                    }
+                }
+            }
+        },
+        {
+            "id": "var-prompt-2",
+            "type": "inputText",
+            "position": {
+                "x": 350,
+                "y": 250
+            },
+            "data": {
+                "label": "Variation 2: Urban",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "same product, modern urban cityscape background, neon lights, night time"
+                    }
+                }
+            }
+        },
+        {
+            "id": "var-prompt-3",
+            "type": "inputText",
+            "position": {
+                "x": 350,
+                "y": 450
+            },
+            "data": {
+                "label": "Variation 3: Nature",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "same product, lush green nature background, soft natural daylight, organic feel"
+                    }
+                }
+            }
+        },
+        {
+            "id": "gen-var-1",
+            "type": "imageGen",
+            "position": {
+                "x": 650,
+                "y": 50
+            },
+            "data": {
+                "label": "Generate Sunset",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "gen-var-2",
+            "type": "imageGen",
+            "position": {
+                "x": 650,
+                "y": 250
+            },
+            "data": {
+                "label": "Generate Urban",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "gen-var-3",
+            "type": "imageGen",
+            "position": {
+                "x": 650,
+                "y": 450
+            },
+            "data": {
+                "label": "Generate Nature",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "e1",
+            "source": "brand-image-1",
+            "target": "gen-var-1",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e2",
+            "source": "brand-image-1",
+            "target": "gen-var-2",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e3",
+            "source": "brand-image-1",
+            "target": "gen-var-3",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e4",
+            "source": "var-prompt-1",
+            "target": "gen-var-1",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e5",
+            "source": "var-prompt-2",
+            "target": "gen-var-2",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e6",
+            "source": "var-prompt-3",
+            "target": "gen-var-3",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        }
+    ]
+}

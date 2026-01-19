@@ -1,0 +1,230 @@
+{
+    "name": "👤 Character Consistency",
+    "description": "Keep the same character across multiple scenes. Upload a face photo and generate consistent images.",
+    "nodes": [
+        {
+            "id": "char-image-1",
+            "type": "inputImage",
+            "position": {
+                "x": 50,
+                "y": 100
+            },
+            "data": {
+                "label": "Character Photo",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "system-char-1",
+            "type": "systemPrompt",
+            "position": {
+                "x": 50,
+                "y": 350
+            },
+            "data": {
+                "label": "Character Analyzer",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "You are an expert at describing people. Analyze the person in the image and create a detailed, consistent description including: age, gender, hair color and style, eye color, facial features, skin tone, and distinctive characteristics. Output this as a reusable character prompt prefix."
+                    }
+                }
+            }
+        },
+        {
+            "id": "gemini-char-1",
+            "type": "llm",
+            "position": {
+                "x": 350,
+                "y": 200
+            },
+            "data": {
+                "label": "Analyze Character",
+                "status": "idle",
+                "inputs": {
+                    "in_system": {
+                        "type": "text"
+                    },
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_text": {
+                        "type": "text"
+                    }
+                },
+                "meta": {
+                    "model": "gemini-2.5-flash"
+                }
+            }
+        },
+        {
+            "id": "scene-1",
+            "type": "inputText",
+            "position": {
+                "x": 350,
+                "y": 450
+            },
+            "data": {
+                "label": "Scene 1: Beach",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "standing on a tropical beach, sunset lighting, casual summer outfit"
+                    }
+                }
+            }
+        },
+        {
+            "id": "scene-2",
+            "type": "inputText",
+            "position": {
+                "x": 350,
+                "y": 650
+            },
+            "data": {
+                "label": "Scene 2: City",
+                "status": "idle",
+                "inputs": {},
+                "outputs": {
+                    "out_text": {
+                        "type": "text",
+                        "value": "walking in a busy city street, modern urban fashion, daytime"
+                    }
+                }
+            }
+        },
+        {
+            "id": "gen-scene-1",
+            "type": "imageGen",
+            "position": {
+                "x": 700,
+                "y": 150
+            },
+            "data": {
+                "label": "Beach Scene",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        },
+        {
+            "id": "gen-scene-2",
+            "type": "imageGen",
+            "position": {
+                "x": 700,
+                "y": 400
+            },
+            "data": {
+                "label": "City Scene",
+                "status": "idle",
+                "inputs": {
+                    "in_text": {
+                        "type": "text"
+                    },
+                    "in_image": {
+                        "type": "image"
+                    }
+                },
+                "outputs": {
+                    "out_image": {
+                        "type": "image"
+                    }
+                }
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "e1",
+            "source": "char-image-1",
+            "target": "gemini-char-1",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e2",
+            "source": "system-char-1",
+            "target": "gemini-char-1",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_system",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e3",
+            "source": "gemini-char-1",
+            "target": "gen-scene-1",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e4",
+            "source": "gemini-char-1",
+            "target": "gen-scene-2",
+            "sourceHandle": "out_text",
+            "targetHandle": "in_text",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#22c55e"
+            }
+        },
+        {
+            "id": "e5",
+            "source": "char-image-1",
+            "target": "gen-scene-1",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        },
+        {
+            "id": "e6",
+            "source": "char-image-1",
+            "target": "gen-scene-2",
+            "sourceHandle": "out_image",
+            "targetHandle": "in_image",
+            "style": {
+                "strokeWidth": 2,
+                "stroke": "#ec4899"
+            }
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "version": "1.0.0",
+    "templates": [
+        {
+            "id": "director-pipeline",
+            "name": "🎬 Director Pipeline",
+            "description": "Upload an image and describe your vision. AI analyzes everything and generates multiple scenes.",
+            "file": "director-pipeline.json",
+            "complexity": "advanced",
+            "nodeCount": 8
+        },
+        {
+            "id": "brand-variations",
+            "name": "🎨 Brand Variations",
+            "description": "Create multiple variations of a brand image with different backgrounds and styles.",
+            "file": "brand-variations.json",
+            "complexity": "intermediate",
+            "nodeCount": 7
+        },
+        {
+            "id": "character-consistency",
+            "name": "👤 Character Consistency",
+            "description": "Keep the same character across multiple scenes. Upload a face photo and generate consistent images.",
+            "file": "character-consistency.json",
+            "complexity": "advanced",
+            "nodeCount": 7
+        },
+        {
+            "id": "storyboard-generator",
+            "name": "📖 Storyboard Generator",
+            "description": "Turn a story description into a visual storyboard. AI breaks down your narrative into scenes.",
+            "file": "storyboard-generator.json",
+            "complexity": "advanced",
+            "nodeCount": 7
+        },
+        {
+            "id": "video-creator",
+            "name": "🎥 Video Creator",
+            "description": "Create a video from an image with AI-generated motion and optional audio sync.",
+            "file": "video-creator.json",
+            "complexity": "advanced",
+            "nodeCount": 7
+        }
+    ]
+}
