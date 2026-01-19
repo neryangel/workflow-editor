@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/neryangel/workflow-editor/compare/v1.9.0...v1.9.1) (2026-01-19)
+
+### Bug Fixes
+
+- update prompts to understand reference images for generation ([a070263](https://github.com/neryangel/workflow-editor/commit/a0702631f71e0fe6c896b2188bae172f3e13a55f))
+
 # [1.9.0](https://github.com/neryangel/workflow-editor/compare/v1.8.1...v1.9.0) (2026-01-19)
 
 ### Features
