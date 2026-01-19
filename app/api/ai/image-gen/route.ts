@@ -83,7 +83,21 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        // Map UI models to official API model IDs (Jan 2026)
+        const modelMap: Record<string, string> = {
+            'imagen-4.0-fast-generate-001': 'imagen-4.0-fast-generate-001',
+            'imagen-4.0-ultra-generate-001': 'imagen-4.0-ultra-generate-001',
+            'nano-banana-pro': 'imagen-4.0-ultra-generate-001', // Alias to highest quality
+            default: 'imagen-3.0-fast-generate-001', // Fallback
+        };
+
+        const targetModel = modelMap[model || 'default'] || modelMap['default'];
+        console.log(`[ImageGen] Mapping '${model}' -> '${targetModel}'`);
+
+        // Use dynamic model URL
+        const dynamicApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent`;
+
+        const response = await fetch(`${dynamicApiUrl}?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

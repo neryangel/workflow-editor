@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { prompt, systemPrompt, imageUrl, imageBase64, videoUrl } = parseResult.data;
+        const { prompt, systemPrompt, imageUrl, imageBase64, videoUrl, model } = parseResult.data;
 
         if (!GEMINI_API_KEY) {
             // Fallback to mock response if no API key
@@ -115,7 +115,11 @@ export async function POST(request: NextRequest) {
             parts,
         });
 
-        const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        // Use selected model or default to Gemini 2.0 Flash (legacy)
+        const selectedModel = model || 'gemini-2.0-flash-exp';
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent`;
+
+        const response = await fetch(`${apiUrl}?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
