@@ -56,9 +56,9 @@ describe('Templates', () => {
 
     describe('getTemplatesByCategory', () => {
         it('should return templates filtered by category', () => {
-            const basicTemplates = getTemplatesByCategory('basic');
-            basicTemplates.forEach((t) => {
-                expect(t.category).toBe('basic');
+            const textTemplates = getTemplatesByCategory('text');
+            textTemplates.forEach((t) => {
+                expect(t.category).toBe('text');
             });
         });
 
@@ -67,10 +67,10 @@ describe('Templates', () => {
             expect(templates).toEqual([]);
         });
 
-        it('should return advanced templates', () => {
-            const advancedTemplates = getTemplatesByCategory('advanced');
-            advancedTemplates.forEach((t) => {
-                expect(t.category).toBe('advanced');
+        it('should return image templates', () => {
+            const imageTemplates = getTemplatesByCategory('image');
+            imageTemplates.forEach((t) => {
+                expect(t.category).toBe('image');
             });
         });
     });
