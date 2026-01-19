@@ -1,3 +1,9 @@
+# [1.12.0](https://github.com/neryangel/workflow-editor/compare/v1.11.0...v1.12.0) (2026-01-19)
+
+### Features
+
+- add Face Reference Generator template for 2-face scene generation ([839404b](https://github.com/neryangel/workflow-editor/commit/839404bafafddf063cd1ab31db63e9a6a973efc9))
+
 # [1.11.0](https://github.com/neryangel/workflow-editor/compare/v1.10.3...v1.11.0) (2026-01-19)
 
 ### Features
