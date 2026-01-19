@@ -57,13 +57,12 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Map UI models to official API model IDs (Jan 2026)
+        // Map UI models to official Veo API model IDs (Jan 2026)
         const modelMap: Record<string, string> = {
+            'veo-3.1-fast': 'veo-3.1-fast-generate-preview',
             'veo-3.1': 'veo-3.1-generate-preview',
-            'veo-3': 'veo-3.0-generate-preview',
-            'veo-2': 'veo-2.0-generate-001',
-            'gen-4': 'veo-2.0-generate-001', // Alias for now
-            default: 'veo-2.0-generate-001',
+            'veo-3.0-full': 'veo-3.0-generate-preview',
+            default: 'veo-3.1-fast-generate-preview',
         };
 
         const targetModel = modelMap[model || 'default'] || modelMap['default'];

@@ -153,7 +153,7 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
                 <div className="flex gap-2">
                     <select
                         className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-300 outline-none focus:border-blue-500"
-                        value={(nodeData.meta?.model as string) || 'veo-2'}
+                        value={(nodeData.meta?.model as string) || 'veo-3.1-fast'}
                         onChange={(e) => {
                             setNodes((nodes) =>
                                 nodes.map((node) =>
@@ -174,10 +174,9 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
                         }}
                         onPointerDown={(e) => e.stopPropagation()}
                     >
-                        <option value="veo-2">Veo 2 (8s video)</option>
-                        <option value="veo-3">Veo 3 (with audio)</option>
-                        <option value="veo-3.1">Veo 3.1 (4K)</option>
-                        <option value="gen-4">Gen-4</option>
+                        <option value="veo-3.1-fast">Veo 3.1 Fast (720p)</option>
+                        <option value="veo-3.1">Veo 3.1 (1080p)</option>
+                        <option value="veo-3.0-full">Veo 3.0 (4K Premium)</option>
                     </select>
 
                     <button
