@@ -12,6 +12,8 @@ export const llmRequestSchema = z.object({
     imageUrl: z.string().url().optional(),
     imageBase64: z.string().optional(),
     videoUrl: z.string().url().optional(),
+    model: z.string().optional(),
+    personaId: z.string().optional(),
 });
 
 export const llmResponseSchema = z.object({

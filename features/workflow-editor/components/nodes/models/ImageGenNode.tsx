@@ -59,6 +59,7 @@ function ImageGenNodeComponent({ id, data, selected }: NodeProps) {
                 body: JSON.stringify({
                     prompt: promptText,
                     referenceImageUrl,
+                    model: (nodeData.meta?.model as string) || 'imagen-4.0-fast-generate-001',
                 }),
             });
 
@@ -145,29 +146,53 @@ function ImageGenNodeComponent({ id, data, selected }: NodeProps) {
                     )}
                 </div>
 
-                <button
-                    onClick={handleRunNode}
-                    disabled={isRunning}
-                    className={`w-full py-2 px-3 text-sm font-medium rounded-lg border
-                        flex items-center justify-center gap-2 transition-colors
-                        ${
+                <div className="flex gap-2">
+                    <select
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-300 outline-none focus:border-pink-500"
+                        value={(nodeData.meta?.model as string) || 'imagen-4.0-fast-generate-001'}
+                        onChange={(e) => {
+                            setNodes((nodes) =>
+                                nodes.map((node) =>
+                                    node.id === id
+                                        ? {
+                                              ...node,
+                                              data: {
+                                                  ...node.data,
+                                                  meta: {
+                                                      ...(node.data.meta || {}),
+                                                      model: e.target.value,
+                                                  },
+                                              },
+                                          }
+                                        : node
+                                )
+                            );
+                        }}
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        <option value="imagen-4.0-fast-generate-001">Imagen 4 Fast</option>
+                        <option value="imagen-4.0-ultra-generate-001">Imagen 4 Ultra</option>
+                        <option value="nano-banana-pro">Nano Banana Pro</option>
+                    </select>
+
+                    <button
+                        onClick={handleRunNode}
+                        disabled={isRunning}
+                        className={`px-3 py-1.5 rounded flex items-center gap-2 text-xs font-medium transition-colors ${
                             isRunning
-                                ? 'bg-slate-700 border-slate-600 text-slate-400 cursor-wait'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-600'
+                                ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                                : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-600'
                         }`}
-                >
-                    {isRunning ? (
-                        <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Generating...
-                        </>
-                    ) : (
-                        <>
-                            <Play className="w-3.5 h-3.5" />
-                            Run
-                        </>
-                    )}
-                </button>
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        {isRunning ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                            <Play className="w-3 h-3" />
+                        )}
+                        Run
+                    </button>
+                </div>
 
                 <HandleRow
                     inputs={[

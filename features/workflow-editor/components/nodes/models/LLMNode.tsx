@@ -5,14 +5,24 @@ import { NodeProps, useReactFlow, useEdges } from '@xyflow/react';
 import { BaseNode } from '../base/BaseNode';
 import { HandleRow } from '../base/NodeHandle';
 import { NodeData } from '../../../types';
-import { Loader2, Play } from 'lucide-react';
+import { Loader2, Play, Maximize2, X, Copy, Check } from 'lucide-react';
 
 function LLMNodeComponent({ id, data, selected }: NodeProps) {
     const { getNodes, setNodes } = useReactFlow();
     const edges = useEdges();
     const [isRunning, setIsRunning] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
     const nodeData = data as unknown as NodeData;
     const outputValue = nodeData.outputs?.out_text?.value as string | undefined;
+
+    const handleCopy = useCallback(() => {
+        if (outputValue) {
+            navigator.clipboard.writeText(outputValue);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        }
+    }, [outputValue]);
 
     const getInputsFromConnections = useCallback(() => {
         const inputs: Record<string, unknown> = {};
@@ -115,92 +125,160 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
         } finally {
             setIsRunning(false);
         }
-    }, [id, setNodes, getInputsFromConnections]);
+    }, [id, setNodes, getInputsFromConnections, nodeData.meta?.model]);
 
     return (
-        <BaseNode
-            label={nodeData.label}
-            status={nodeData.status}
-            error={nodeData.error}
-            selected={selected}
-        >
-            <div className="flex flex-col gap-3">
+        <>
+            {/* Expanded Modal */}
+            {isExpanded && outputValue && (
                 <div
-                    className="min-h-[60px] rounded-lg p-3 text-xs overflow-hidden"
-                    style={{ backgroundColor: '#0f172a' }}
+                    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-8"
+                    onClick={() => setIsExpanded(false)}
                 >
-                    {nodeData.status === 'running' || isRunning ? (
-                        <div className="flex items-center gap-2 text-slate-500">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Processing...</span>
+                    <div
+                        className="bg-slate-900 rounded-xl border border-slate-700 max-w-2xl w-full max-h-[80vh] flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between p-4 border-b border-slate-700">
+                            <span className="text-sm font-medium text-slate-200">Full Output</span>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handleCopy}
+                                    className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-slate-200"
+                                >
+                                    {isCopied ? (
+                                        <Check className="w-4 h-4 text-green-400" />
+                                    ) : (
+                                        <Copy className="w-4 h-4" />
+                                    )}
+                                </button>
+                                <button
+                                    onClick={() => setIsExpanded(false)}
+                                    className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-slate-200"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
-                    ) : outputValue ? (
-                        <p className="text-slate-300 leading-relaxed line-clamp-4">{outputValue}</p>
-                    ) : (
-                        <p className="text-slate-600">Output will appear here</p>
-                    )}
+                        <div className="p-4 overflow-auto flex-1">
+                            <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                                {outputValue}
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            )}
 
-            <div className="flex gap-2">
-                <select
-                    className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300 outline-none focus:border-blue-500"
-                    value={(nodeData.meta?.model as string) || 'gemini-2.0-flash'}
-                    onChange={(e) => {
-                        setNodes((nodes) =>
-                            nodes.map((node) =>
-                                node.id === id
-                                    ? {
-                                          ...node,
-                                          data: {
-                                              ...node.data,
-                                              meta: {
-                                                  ...(node.data.meta || {}),
-                                                  model: e.target.value,
+            <BaseNode
+                label={nodeData.label}
+                status={nodeData.status}
+                error={nodeData.error}
+                selected={selected}
+            >
+                <div className="flex flex-col gap-3">
+                    <div className="relative">
+                        <div
+                            className="min-h-[60px] max-h-[120px] rounded-lg p-3 text-xs overflow-auto"
+                            style={{ backgroundColor: '#0f172a' }}
+                        >
+                            {nodeData.status === 'running' || isRunning ? (
+                                <div className="flex items-center gap-2 text-slate-500">
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    <span>Processing...</span>
+                                </div>
+                            ) : outputValue ? (
+                                <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">
+                                    {outputValue}
+                                </p>
+                            ) : (
+                                <p className="text-slate-600">Output will appear here</p>
+                            )}
+                        </div>
+                        {outputValue && !isRunning && (
+                            <div className="absolute top-1 right-1 flex gap-1">
+                                <button
+                                    onClick={handleCopy}
+                                    className="p-1.5 bg-slate-800/80 hover:bg-slate-700 rounded transition-colors text-slate-400 hover:text-slate-200"
+                                    title="Copy"
+                                >
+                                    {isCopied ? (
+                                        <Check className="w-3 h-3 text-green-400" />
+                                    ) : (
+                                        <Copy className="w-3 h-3" />
+                                    )}
+                                </button>
+                                <button
+                                    onClick={() => setIsExpanded(true)}
+                                    className="p-1.5 bg-slate-800/80 hover:bg-slate-700 rounded transition-colors text-slate-400 hover:text-slate-200"
+                                    title="Expand"
+                                >
+                                    <Maximize2 className="w-3 h-3" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex gap-2">
+                    <select
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300 outline-none focus:border-blue-500"
+                        value={(nodeData.meta?.model as string) || 'gemini-2.0-flash'}
+                        onChange={(e) => {
+                            setNodes((nodes) =>
+                                nodes.map((node) =>
+                                    node.id === id
+                                        ? {
+                                              ...node,
+                                              data: {
+                                                  ...node.data,
+                                                  meta: {
+                                                      ...(node.data.meta || {}),
+                                                      model: e.target.value,
+                                                  },
                                               },
-                                          },
-                                      }
-                                    : node
-                            )
-                        );
-                    }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                >
-                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (Vision & Gen)</option>
-                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Reasoning)</option>
-                    <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Coding)</option>
-                    <option value="gpt-4o">GPT-4o (General)</option>
-                </select>
+                                          }
+                                        : node
+                                )
+                            );
+                        }}
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash (Vision & Gen)</option>
+                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Reasoning)</option>
+                        <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Coding)</option>
+                        <option value="gpt-4o">GPT-4o (General)</option>
+                    </select>
 
-                <button
-                    onClick={handleRunNode}
-                    disabled={nodeData.status === 'running' || isRunning}
-                    className={`px-3 py-1.5 rounded flex items-center gap-2 text-xs font-medium transition-colors ${
-                        nodeData.status === 'running' || isRunning
-                            ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                            : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-600'
-                    }`}
-                    onPointerDown={(e) => e.stopPropagation()}
-                >
-                    {nodeData.status === 'running' || isRunning ? (
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                        <Play className="w-3 h-3" />
-                    )}
-                    Run
-                </button>
-            </div>
+                    <button
+                        onClick={handleRunNode}
+                        disabled={nodeData.status === 'running' || isRunning}
+                        className={`px-3 py-1.5 rounded flex items-center gap-2 text-xs font-medium transition-colors ${
+                            nodeData.status === 'running' || isRunning
+                                ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                                : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-600'
+                        }`}
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        {nodeData.status === 'running' || isRunning ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                            <Play className="w-3 h-3" />
+                        )}
+                        Run
+                    </button>
+                </div>
 
-            <HandleRow
-                inputs={[
-                    { id: 'in_system', type: 'text', label: 'system' },
-                    { id: 'in_text', type: 'text', label: 'text' },
-                    { id: 'in_image', type: 'image', label: 'image' },
-                    { id: 'in_video', type: 'video', label: 'video' },
-                ]}
-                outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}
-            />
-        </BaseNode>
+                <HandleRow
+                    inputs={[
+                        { id: 'in_system', type: 'text', label: 'system' },
+                        { id: 'in_text', type: 'text', label: 'text' },
+                        { id: 'in_image', type: 'image', label: 'image' },
+                        { id: 'in_video', type: 'video', label: 'video' },
+                    ]}
+                    outputs={[{ id: 'out_text', type: 'text', label: 'text' }]}
+                />
+            </BaseNode>
+        </>
     );
 }
 
