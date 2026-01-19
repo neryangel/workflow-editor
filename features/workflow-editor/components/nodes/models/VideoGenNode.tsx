@@ -48,10 +48,29 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
         );
 
         try {
-            const _inputs = getInputsFromConnections();
-            await new Promise((resolve) => setTimeout(resolve, 2000 + Math.random() * 1000));
+            const inputs = getInputsFromConnections();
+            const promptText = (inputs.in_text as string) || 'cinematic video';
+            const imageUrl = (inputs.in_image as string) || undefined;
+
+            // Call the real video generation API
+            const response = await fetch('/api/ai/video-gen', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: promptText,
+                    imageUrl,
+                    model: (nodeData.meta?.model as string) || 'veo-2',
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Video generation failed');
+            }
 
             const videoUrl =
+                result.videoUrl ||
                 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4';
 
             setNodes((nodes) =>
@@ -93,7 +112,7 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
         } finally {
             setIsRunning(false);
         }
-    }, [id, setNodes, getInputsFromConnections]);
+    }, [id, setNodes, getInputsFromConnections, nodeData.meta?.model]);
 
     return (
         <BaseNode
@@ -131,29 +150,54 @@ function VideoGenNodeComponent({ id, data, selected }: NodeProps) {
                     )}
                 </div>
 
-                <button
-                    onClick={handleRunNode}
-                    disabled={isRunning}
-                    className={`w-full py-2 px-3 text-sm font-medium rounded-lg border
-                        flex items-center justify-center gap-2 transition-colors
-                        ${
+                <div className="flex gap-2">
+                    <select
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-300 outline-none focus:border-blue-500"
+                        value={(nodeData.meta?.model as string) || 'veo-2'}
+                        onChange={(e) => {
+                            setNodes((nodes) =>
+                                nodes.map((node) =>
+                                    node.id === id
+                                        ? {
+                                              ...node,
+                                              data: {
+                                                  ...node.data,
+                                                  meta: {
+                                                      ...(node.data.meta || {}),
+                                                      model: e.target.value,
+                                                  },
+                                              },
+                                          }
+                                        : node
+                                )
+                            );
+                        }}
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        <option value="veo-2">Veo 2 (8s video)</option>
+                        <option value="veo-3">Veo 3 (with audio)</option>
+                        <option value="veo-3.1">Veo 3.1 (4K)</option>
+                        <option value="gen-4">Gen-4</option>
+                    </select>
+
+                    <button
+                        onClick={handleRunNode}
+                        disabled={isRunning}
+                        className={`px-3 py-1.5 rounded flex items-center gap-2 text-xs font-medium transition-colors ${
                             isRunning
-                                ? 'bg-slate-700 border-slate-600 text-slate-400 cursor-wait'
-                                : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-600'
+                                ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                                : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-600'
                         }`}
-                >
-                    {isRunning ? (
-                        <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Generating...
-                        </>
-                    ) : (
-                        <>
-                            <Play className="w-3.5 h-3.5" />
-                            Run
-                        </>
-                    )}
-                </button>
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        {isRunning ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                            <Play className="w-3 h-3" />
+                        )}
+                        Run
+                    </button>
+                </div>
 
                 <HandleRow
                     inputs={[
