@@ -52,14 +52,19 @@ function ImageGenNodeComponent({ id, data, selected }: NodeProps) {
             const promptText = (inputs.in_text as string) || 'beautiful landscape';
             const referenceImageUrl = (inputs.in_image as string) || undefined;
 
-            // Call the real image generation API
+            // Collect reference images into array for character consistency
+            const referenceImageUrls: string[] = [];
+            if (referenceImageUrl) referenceImageUrls.push(referenceImageUrl);
+
+            // Call the image generation API with reference images
             const response = await fetch('/api/ai/image-gen', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt: promptText,
-                    referenceImageUrl,
-                    model: (nodeData.meta?.model as string) || 'imagen-4.0-fast-generate-001',
+                    referenceImageUrls:
+                        referenceImageUrls.length > 0 ? referenceImageUrls : undefined,
+                    model: (nodeData.meta?.model as string) || 'nano-banana-pro',
                 }),
             });
 

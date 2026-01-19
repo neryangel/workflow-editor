@@ -7,6 +7,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const imageGenRequestSchema = z.object({
     prompt: z.string().min(1, 'Prompt is required').max(5000),
     referenceImageUrl: z.string().url().optional(),
+    referenceImageUrls: z.array(z.string().url()).max(3).optional(), // Multiple reference images
     referenceImageBase64: z.string().optional(),
     model: z.string().optional(),
 });
@@ -39,10 +40,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { prompt, referenceImageUrl, referenceImageBase64, model } = parseResult.data;
+        const { prompt, referenceImageUrl, referenceImageUrls, referenceImageBase64, model } =
+            parseResult.data;
 
-        // Log chosen model (Mapping strategy: Imagen 3/4/Nano -> Gemini Gen, Flux -> External)
-        console.log(`[ImageGen] Generating with model: ${model || 'default (imagen-3-fast)'}`);
+        // Log chosen model
+        console.log(`[ImageGen] Generating with model: ${model || 'default'}`);
+        console.log(
+            `[ImageGen] Reference images: ${(referenceImageUrls?.length || 0) + (referenceImageUrl ? 1 : 0)}`
+        );
 
         if (!GEMINI_API_KEY) {
             // Fallback to mock response with placeholder image
@@ -54,14 +59,11 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Build the request parts
+        // Build the request parts - images FIRST, then text (best practice for multimodal)
         const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> =
             [];
 
-        // Add text prompt
-        parts.push({ text: prompt });
-
-        // Add reference image if provided
+        // Add reference images FIRST (before text prompt)
         if (referenceImageBase64) {
             parts.push({
                 inline_data: {
@@ -69,7 +71,10 @@ export async function POST(request: NextRequest) {
                     data: referenceImageBase64,
                 },
             });
-        } else if (referenceImageUrl) {
+        }
+
+        // Add single reference image URL (backward compat)
+        if (referenceImageUrl) {
             const base64 = await fetchImageAsBase64(referenceImageUrl);
             if (base64) {
                 parts.push({
@@ -81,18 +86,37 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Map UI models to official API model IDs (Jan 2026)
+        // Add multiple reference images (for character consistency)
+        if (referenceImageUrls && referenceImageUrls.length > 0) {
+            for (const url of referenceImageUrls) {
+                const base64 = await fetchImageAsBase64(url);
+                if (base64) {
+                    parts.push({
+                        inline_data: {
+                            mime_type: 'image/jpeg',
+                            data: base64,
+                        },
+                    });
+                }
+            }
+        }
+
+        // Add text prompt AFTER images
+        parts.push({ text: prompt });
+
+        // Map UI models to Gemini 2.0 Flash for native multimodal image generation
+        // Imagen 4 does NOT support reference images, so we use Gemini's native image gen
         const modelMap: Record<string, string> = {
-            'imagen-4.0-fast-generate-001': 'imagen-4.0-fast-generate-001',
-            'imagen-4.0-ultra-generate-001': 'imagen-4.0-ultra-generate-001',
-            'nano-banana-pro': 'imagen-4.0-ultra-generate-001', // Alias to highest quality
-            default: 'imagen-3.0-fast-generate-001', // Fallback
+            'imagen-4-fast': 'gemini-2.0-flash-exp-image-generation',
+            'imagen-4-ultra': 'gemini-2.0-flash-exp-image-generation',
+            'nano-banana-pro': 'gemini-2.0-flash-exp-image-generation',
+            default: 'gemini-2.0-flash-exp-image-generation',
         };
 
         const targetModel = modelMap[model || 'default'] || modelMap['default'];
-        console.log(`[ImageGen] Mapping '${model}' -> '${targetModel}'`);
+        console.log(`[ImageGen] Using model: ${targetModel}`);
 
-        // Use dynamic model URL
+        // Use Gemini API for multimodal image generation
         const dynamicApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent`;
 
         const response = await fetch(`${dynamicApiUrl}?key=${GEMINI_API_KEY}`, {
