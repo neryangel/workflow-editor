@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { llmRequestSchema } from '@/shared/lib/api-schemas';
+import { composePrompt } from '@features/workflow-editor/prompts';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL =
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 // Helper to fetch image and convert to base64
 async function fetchImageAsBase64(url: string): Promise<string | null> {
@@ -49,7 +48,8 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { prompt, systemPrompt, imageUrl, imageBase64, videoUrl, model } = parseResult.data;
+        const { prompt, systemPrompt, imageUrl, imageBase64, videoUrl, model, personaId } =
+            parseResult.data;
 
         if (!GEMINI_API_KEY) {
             // Fallback to mock response if no API key
@@ -60,12 +60,24 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // Use prompt composer to build enhanced system prompt
+        const composed = composePrompt({
+            userPrompt: prompt,
+            userSystemPrompt: systemPrompt,
+            personaId: personaId,
+            nodeType: 'llm',
+            usePersona: !!personaId, // Only use persona if explicitly selected
+        });
+
+        console.log('[LLM] Using persona:', personaId || 'none');
+        console.log('[LLM] System prompt length:', composed.systemPrompt.length);
+
         // Build the request parts for Gemini API
         const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> =
             [];
 
         // Add text prompt
-        parts.push({ text: prompt });
+        parts.push({ text: composed.userPrompt });
 
         // Add image if provided (base64 or URL)
         if (imageBase64) {
@@ -100,13 +112,18 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Build contents array
+        // Build contents array with composed system prompt
         const contents = [];
 
-        if (systemPrompt) {
+        // Always add composed system prompt
+        if (composed.systemPrompt) {
             contents.push({
                 role: 'user',
-                parts: [{ text: `System: ${systemPrompt}` }],
+                parts: [{ text: composed.systemPrompt }],
+            });
+            contents.push({
+                role: 'model',
+                parts: [{ text: 'Understood. I will follow these instructions.' }],
             });
         }
 
@@ -115,8 +132,8 @@ export async function POST(request: NextRequest) {
             parts,
         });
 
-        // Use selected model or default to Gemini 2.0 Flash (legacy)
-        const selectedModel = model || 'gemini-2.0-flash-exp';
+        // Use selected model or default to Gemini 2.5 Flash
+        const selectedModel = model || 'gemini-2.5-flash-preview-05-20';
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent`;
 
         const response = await fetch(`${apiUrl}?key=${GEMINI_API_KEY}`, {
@@ -128,7 +145,7 @@ export async function POST(request: NextRequest) {
                 contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 2048,
+                    maxOutputTokens: 4096,
                 },
             }),
         });
@@ -151,6 +168,7 @@ export async function POST(request: NextRequest) {
             success: true,
             text,
             usage: data.usageMetadata,
+            persona: personaId || null,
         });
     } catch (error) {
         console.error('LLM API error:', error);

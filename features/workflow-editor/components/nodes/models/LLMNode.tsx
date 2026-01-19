@@ -74,7 +74,8 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                     systemPrompt: systemText || undefined,
                     imageUrl,
                     videoUrl,
-                    model: (nodeData.meta?.model as string) || 'gemini-2.0-flash',
+                    model: (nodeData.meta?.model as string) || 'gemini-2.5-flash-preview-05-20',
+                    personaId: (nodeData.meta?.personaId as string) || undefined,
                 }),
             });
 
@@ -125,7 +126,7 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
         } finally {
             setIsRunning(false);
         }
-    }, [id, setNodes, getInputsFromConnections, nodeData.meta?.model]);
+    }, [id, setNodes, getInputsFromConnections, nodeData.meta?.model, nodeData.meta?.personaId]);
 
     return (
         <>
@@ -219,10 +220,42 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                     </div>
                 </div>
 
+                {/* Persona Selector */}
+                <select
+                    className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-300 outline-none focus:border-purple-500 mb-2"
+                    value={(nodeData.meta?.personaId as string) || ''}
+                    onChange={(e) => {
+                        setNodes((nodes) =>
+                            nodes.map((node) =>
+                                node.id === id
+                                    ? {
+                                          ...node,
+                                          data: {
+                                              ...node.data,
+                                              meta: {
+                                                  ...(node.data.meta || {}),
+                                                  personaId: e.target.value || undefined,
+                                              },
+                                          },
+                                      }
+                                    : node
+                            )
+                        );
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                >
+                    <option value="">🤖 Default AI</option>
+                    <option value="director">🎬 Film Director</option>
+                    <option value="sceneAnalyst">🔍 Scene Analyst</option>
+                    <option value="promptEngineer">✨ Prompt Engineer</option>
+                    <option value="scriptWriter">📝 Screenwriter</option>
+                    <option value="editor">🎞️ Video Editor</option>
+                </select>
+
                 <div className="flex gap-2">
                     <select
                         className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300 outline-none focus:border-blue-500"
-                        value={(nodeData.meta?.model as string) || 'gemini-2.0-flash'}
+                        value={(nodeData.meta?.model as string) || 'gemini-2.5-flash-preview-05-20'}
                         onChange={(e) => {
                             setNodes((nodes) =>
                                 nodes.map((node) =>
@@ -243,10 +276,9 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                         }}
                         onPointerDown={(e) => e.stopPropagation()}
                     >
-                        <option value="gemini-2.0-flash">Gemini 2.0 Flash (Vision & Gen)</option>
-                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Reasoning)</option>
-                        <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Coding)</option>
-                        <option value="gpt-4o">GPT-4o (General)</option>
+                        <option value="gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash</option>
+                        <option value="gemini-2.5-pro-preview-05-20">Gemini 2.5 Pro</option>
+                        <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash</option>
                     </select>
 
                     <button
