@@ -37,7 +37,8 @@ describe('Performance Metrics', () => {
         const metrics = getMetrics();
         expect(metrics).toHaveLength(1);
         expect(metrics[0].name).toBe('test-async');
-        expect(metrics[0].duration).toBeGreaterThanOrEqual(10);
+        // Allow small tolerance (9ms) for timer precision variations in CI
+        expect(metrics[0].duration).toBeGreaterThanOrEqual(9);
     });
 
     it('should track errors with :error suffix', () => {
