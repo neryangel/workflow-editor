@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/neryangel/workflow-editor/compare/v1.6.0...v1.7.0) (2026-01-19)
+
+### Features
+
+- enforce Google-First AI strategy (Jan 2026) ([60a9ab5](https://github.com/neryangel/workflow-editor/commit/60a9ab50a33640714b2d3a45399669882e57a6fb))
+- integrate real APIs and add model selectors ([834a5e8](https://github.com/neryangel/workflow-editor/commit/834a5e85f4e04764676e9589703fc9cfb9e53ffe))
+
 # [1.6.0](https://github.com/neryangel/workflow-editor/compare/v1.5.0...v1.6.0) (2026-01-19)
 
 ### Features
