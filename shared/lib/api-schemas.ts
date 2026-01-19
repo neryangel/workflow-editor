@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * API Request/Response Schemas
@@ -7,48 +7,51 @@ import { z } from "zod";
 
 // LLM API
 export const llmRequestSchema = z.object({
-  prompt: z.string().min(1, "Prompt is required").max(10000, "Prompt too long"),
-  systemPrompt: z.string().max(5000).optional(),
+    prompt: z.string().min(1, 'Prompt is required').max(10000, 'Prompt too long'),
+    systemPrompt: z.string().max(5000).optional(),
+    imageUrl: z.string().url().optional(),
+    imageBase64: z.string().optional(),
+    videoUrl: z.string().url().optional(),
 });
 
 export const llmResponseSchema = z.object({
-  success: z.boolean(),
-  text: z.string().optional(),
-  mock: z.boolean().optional(),
-  error: z.string().optional(),
-  usage: z.unknown().optional(),
+    success: z.boolean(),
+    text: z.string().optional(),
+    mock: z.boolean().optional(),
+    error: z.string().optional(),
+    usage: z.unknown().optional(),
 });
 
 // Run Workflow API
 export const workflowNodeSchema = z.object({
-  id: z.string().min(1),
-  type: z.string().min(1),
-  position: z
-    .object({
-      x: z.number(),
-      y: z.number(),
-    })
-    .optional(),
-  data: z.record(z.string(), z.unknown()),
+    id: z.string().min(1),
+    type: z.string().min(1),
+    position: z
+        .object({
+            x: z.number(),
+            y: z.number(),
+        })
+        .optional(),
+    data: z.record(z.string(), z.unknown()),
 });
 
 export const workflowEdgeSchema = z.object({
-  id: z.string().min(1),
-  source: z.string().min(1),
-  target: z.string().min(1),
-  sourceHandle: z.string().optional(),
-  targetHandle: z.string().optional(),
+    id: z.string().min(1),
+    source: z.string().min(1),
+    target: z.string().min(1),
+    sourceHandle: z.string().optional(),
+    targetHandle: z.string().optional(),
 });
 
 export const runWorkflowRequestSchema = z.object({
-  nodes: z.array(workflowNodeSchema).min(0).max(100, "Too many nodes"),
-  edges: z.array(workflowEdgeSchema).min(0).max(500, "Too many edges"),
+    nodes: z.array(workflowNodeSchema).min(0).max(100, 'Too many nodes'),
+    edges: z.array(workflowEdgeSchema).min(0).max(500, 'Too many edges'),
 });
 
 export const runWorkflowResponseSchema = z.object({
-  success: z.boolean(),
-  nodes: z.array(workflowNodeSchema).optional(),
-  error: z.string().optional(),
+    success: z.boolean(),
+    nodes: z.array(workflowNodeSchema).optional(),
+    error: z.string().optional(),
 });
 
 // Type exports

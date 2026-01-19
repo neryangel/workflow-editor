@@ -49,6 +49,8 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
             const inputs = getInputsFromConnections();
             const systemText = (inputs.in_system as string) || '';
             const inputText = (inputs.in_text as string) || '';
+            const imageUrl = (inputs.in_image as string) || undefined;
+            const videoUrl = (inputs.in_video as string) || undefined;
 
             if (!inputText) {
                 throw new Error('No input text provided');
@@ -60,6 +62,8 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                 body: JSON.stringify({
                     prompt: inputText,
                     systemPrompt: systemText || undefined,
+                    imageUrl,
+                    videoUrl,
                 }),
             });
 
