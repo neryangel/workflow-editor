@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/neryangel/workflow-editor/compare/v1.10.0...v1.10.1) (2026-01-19)
+
+### Bug Fixes
+
+- resolve all ESLint warnings and cleanup unused code ([71eb87e](https://github.com/neryangel/workflow-editor/commit/71eb87ebd97172a688276a2e9bbd542b85a389b8))
+
 # [1.10.0](https://github.com/neryangel/workflow-editor/compare/v1.9.1...v1.10.0) (2026-01-19)
 
 ### Features
