@@ -1,3 +1,9 @@
+## [1.8.1](https://github.com/neryangel/workflow-editor/compare/v1.8.0...v1.8.1) (2026-01-19)
+
+### Bug Fixes
+
+- correct Veo model names and fix executor tests ([6c706d1](https://github.com/neryangel/workflow-editor/commit/6c706d1d6f2c799d0a0bf1bfc3eb5076614f73e1))
+
 # [1.8.0](https://github.com/neryangel/workflow-editor/compare/v1.7.0...v1.8.0) (2026-01-19)
 
 ### Features
