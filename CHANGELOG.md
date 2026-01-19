@@ -1,3 +1,9 @@
+# [1.8.0](https://github.com/neryangel/workflow-editor/compare/v1.7.0...v1.8.0) (2026-01-19)
+
+### Features
+
+- add video generation API with Veo 2/3/3.1 support ([a602b6d](https://github.com/neryangel/workflow-editor/commit/a602b6d530a357f0371c108d4f3fa23e4c14047c))
+
 # [1.7.0](https://github.com/neryangel/workflow-editor/compare/v1.6.0...v1.7.0) (2026-01-19)
 
 ### Features
