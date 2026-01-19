@@ -1,3 +1,9 @@
+## [1.15.1](https://github.com/neryangel/workflow-editor/compare/v1.15.0...v1.15.1) (2026-01-19)
+
+### Bug Fixes
+
+- correct category types in templates.test.ts ([76535e3](https://github.com/neryangel/workflow-editor/commit/76535e3ca7785fe89ebeac45454604009f34ca42))
+
 # [1.15.0](https://github.com/neryangel/workflow-editor/compare/v1.14.0...v1.15.0) (2026-01-19)
 
 ### Features
