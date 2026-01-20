@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { Node, Edge } from '@xyflow/react';
 import { Save, FolderOpen, Download, Upload, Plus, ChevronDown, Layout } from 'lucide-react';
 import { useWorkflowPersist } from '../../hooks';
+import { LanguageToggle } from '../LanguageToggle';
 
 interface TemplateInfo {
     id: string;
@@ -208,7 +209,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                 <div className="fixed inset-0 z-40" onClick={() => setShowTemplates(false)}>
                     <div
                         className="absolute top-16 left-72 w-96 bg-slate-800 border border-slate-700 
-                       rounded-lg shadow-xl p-3 max-h-[70vh] overflow-auto"
+                       rounded-lg shadow-xl p-3 max-h-[70vh] overflow-auto z-50"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-sm font-medium text-white mb-3 flex items-center gap-2">
@@ -301,8 +302,11 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                 </div>
             )}
             {/* Save Status */}
-            <div className="text-xs text-slate-500 ml-auto">
-                {nodes.length} nodes • {edges.length} connections
+            <div className="flex items-center gap-3 ml-auto">
+                <LanguageToggle />
+                <div className="text-xs text-slate-500">
+                    {nodes.length} nodes • {edges.length} connections
+                </div>
             </div>
         </div>
     );
