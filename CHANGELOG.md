@@ -1,3 +1,9 @@
+# [1.17.0](https://github.com/neryangel/workflow-editor/compare/v1.16.0...v1.17.0) (2026-01-20)
+
+### Features
+
+- add node context menu with Delete action ([10705f0](https://github.com/neryangel/workflow-editor/commit/10705f04faf44ff1cc48920dcba4dc16949b8f2b))
+
 # [1.16.0](https://github.com/neryangel/workflow-editor/compare/v1.15.2...v1.16.0) (2026-01-20)
 
 ### Features
