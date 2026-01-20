@@ -158,8 +158,8 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
 
                 {isMenuOpen && (
                     <div
-                        className="absolute top-full left-0 mt-1 w-48 bg-slate-800 border border-slate-700 
-                          rounded-lg shadow-xl z-50 overflow-hidden"
+                        className="absolute top-full left-0 mt-1 w-48 bg-slate-800 border border-slate-700
+                          rounded-lg shadow-xl z-[1001] overflow-hidden"
                     >
                         <button
                             onClick={handleNew}
@@ -219,10 +219,10 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
 
             {/* Templates Dropdown */}
             {showTemplates && (
-                <div className="fixed inset-0 z-40" onClick={() => setShowTemplates(false)}>
+                <div className="fixed inset-0 z-[1000]" onClick={() => setShowTemplates(false)}>
                     <div
-                        className="absolute top-16 left-72 w-96 bg-slate-800 border border-slate-700 
-                       rounded-lg shadow-xl p-3 max-h-[70vh] overflow-auto z-50"
+                        className="absolute top-16 left-72 w-96 bg-slate-800 border border-slate-700
+                       rounded-lg shadow-xl p-3 max-h-[70vh] overflow-auto z-[1001]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-sm font-medium text-white mb-3 flex items-center gap-2">
@@ -269,10 +269,10 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
 
             {/* Saved Workflows Dropdown */}
             {showSaved && (
-                <div className="fixed inset-0 z-40" onClick={() => setShowSaved(false)}>
+                <div className="fixed inset-0 z-[1000]" onClick={() => setShowSaved(false)}>
                     <div
-                        className="absolute top-16 left-64 w-72 bg-slate-800 border border-slate-700 
-                       rounded-lg shadow-xl p-2 max-h-80 overflow-auto z-50"
+                        className="absolute top-16 left-64 w-72 bg-slate-800 border border-slate-700
+                       rounded-lg shadow-xl p-2 max-h-80 overflow-auto z-[1001]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-xs text-slate-500 px-2 py-1 mb-1">Saved Workflows</div>
