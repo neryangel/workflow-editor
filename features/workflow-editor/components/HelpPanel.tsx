@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { HelpCircle, X, ChevronDown, ChevronUp } from 'lucide-react';
-import { t, isRTL } from '@/shared/lib/i18n';
+import { useI18n } from '@/shared/lib/i18n-context';
 
 export function HelpPanel() {
+    const { t, isRTL } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
     const [showShortcuts, setShowShortcuts] = useState(false);
 
@@ -34,9 +35,9 @@ export function HelpPanel() {
                 >
                     <div
                         className={`bg-slate-900 border border-slate-700 rounded-xl shadow-2xl 
-                                    max-w-md w-full mx-4 p-6 ${isRTL() ? 'text-right' : 'text-left'}`}
+                                    max-w-md w-full mx-4 p-6 ${isRTL ? 'text-right' : 'text-left'}`}
                         onClick={(e) => e.stopPropagation()}
-                        dir={isRTL() ? 'rtl' : 'ltr'}
+                        dir={isRTL ? 'rtl' : 'ltr'}
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between mb-6">
@@ -134,7 +135,7 @@ export function HelpPanel() {
                         <div className="mt-6 p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
                             <p className="text-sm text-emerald-300">
                                 💡{' '}
-                                {isRTL()
+                                {isRTL
                                     ? 'טיפ: השתמש בתבניות מוכנות להתחלה מהירה!'
                                     : 'Tip: Use templates for a quick start!'}
                             </p>
