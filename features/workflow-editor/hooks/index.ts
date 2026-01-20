@@ -19,3 +19,9 @@ export type {
 
 export { useDragAndDrop } from './useDragAndDrop';
 export type { UseDragAndDropOptions, UseDragAndDropReturn } from './useDragAndDrop';
+
+export { useVariables } from './useVariables';
+export type { UseVariablesReturn } from './useVariables';
+
+export { useExecutionHistory } from './useExecutionHistory';
+export type { UseExecutionHistoryReturn } from './useExecutionHistory';

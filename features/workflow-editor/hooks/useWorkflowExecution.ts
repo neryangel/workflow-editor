@@ -10,7 +10,11 @@ export interface UseWorkflowExecutionOptions {
 
 export interface UseWorkflowExecutionReturn {
     isRunning: boolean;
-    executeWorkflow: (nodes: Node[], edges: Edge[]) => Promise<Node[] | null>;
+    executeWorkflow: (
+        nodes: Node[],
+        edges: Edge[],
+        variables?: Record<string, string | number | boolean>
+    ) => Promise<Node[] | null>;
     cancelExecution: () => void;
 }
 
@@ -34,7 +38,11 @@ export function useWorkflowExecution(
     }, []);
 
     const executeWorkflow = useCallback(
-        async (nodes: Node[], edges: Edge[]): Promise<Node[] | null> => {
+        async (
+            nodes: Node[],
+            edges: Edge[],
+            variables?: Record<string, string | number | boolean>
+        ): Promise<Node[] | null> => {
             // Cancel any previous execution
             cancelExecution();
 
@@ -64,6 +72,7 @@ export function useWorkflowExecution(
                             sourceHandle: e.sourceHandle,
                             targetHandle: e.targetHandle,
                         })),
+                        variables: variables || {},
                     }),
                 });
 

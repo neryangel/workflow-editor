@@ -22,7 +22,7 @@ export async function POST(
       );
     }
 
-    const { nodes, edges } = parseResult.data;
+    const { nodes, edges, variables } = parseResult.data;
 
     // Validate node structure (additional business logic validation)
     for (const node of nodes) {
@@ -42,6 +42,7 @@ export async function POST(
     const result = await engine.execute(
       nodes as unknown as import("@features/workflow-editor/types").WorkflowNode[],
       edges as unknown as import("@features/workflow-editor/types").WorkflowEdge[],
+      variables,
     );
 
     return NextResponse.json(result);

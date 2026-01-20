@@ -49,6 +49,7 @@ export const workflowEdgeSchema = z.object({
 export const runWorkflowRequestSchema = z.object({
     nodes: z.array(workflowNodeSchema).min(0).max(100, 'Too many nodes'),
     edges: z.array(workflowEdgeSchema).min(0).max(500, 'Too many edges'),
+    variables: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
 });
 
 export const runWorkflowResponseSchema = z.object({

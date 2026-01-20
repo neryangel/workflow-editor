@@ -1,8 +1,9 @@
 // WorkflowEngine - Main execution engine for workflows
 
-import { WorkflowNode, WorkflowNodeType } from "../../types";
+import { WorkflowNode, WorkflowNodeType, VariableContext } from "../../types";
 import { WorkflowEdge, ExecutionResult } from "../../types";
 import { DependencyGraph } from "./DependencyGraph";
+import { VariableSubstitution } from "../variables/VariableSubstitution";
 import {
   BaseExecutor,
   LLMExecutor,
@@ -55,10 +56,13 @@ export class WorkflowEngine {
   async execute(
     nodes: WorkflowNode[],
     edges: WorkflowEdge[],
+    variables?: VariableContext,
   ): Promise<ExecutionResult> {
     if (nodes.length === 0) {
       return { success: false, error: "No nodes to execute" };
     }
+
+    const variableContext = variables || {};
 
     const graph = new DependencyGraph(
       nodes.map((n) => n.id),
@@ -131,9 +135,14 @@ export class WorkflowEngine {
           const currentNode = nodeMap.get(nodeId)!;
 
           if (executor) {
+            // Apply variable substitution to node meta
+            const substitutedMeta = currentNode.data.meta
+              ? VariableSubstitution.substituteInObject(currentNode.data.meta, variableContext)
+              : currentNode.data.meta;
+
             const outputs = await executor.execute(
               inputs,
-              currentNode.data.meta,
+              substitutedMeta,
             );
 
             // Update node outputs

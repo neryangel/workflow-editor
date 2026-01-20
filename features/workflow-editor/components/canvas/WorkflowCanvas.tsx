@@ -37,7 +37,7 @@ import {
     OutputNode,
 } from '../nodes';
 import { arePortsCompatible, PORT_COLORS } from '../../constants';
-import { useDragAndDrop, useWorkflowExecution, useKeyboardShortcuts } from '../../hooks';
+import { useDragAndDrop, useWorkflowExecution, useKeyboardShortcuts, useVariables } from '../../hooks';
 import { NodeData, PortType } from '../../types';
 import { WorkflowRunButton } from './WorkflowRunButton';
 
@@ -91,6 +91,9 @@ function WorkflowEditorInner() {
 
     // Use extracted execution hook with AbortController support
     const { isRunning, executeWorkflow, cancelExecution } = useWorkflowExecution();
+
+    // Use variables hook
+    const { variableContext } = useVariables();
 
     // Use extracted drag and drop hook
     const { onDragOver, onDrop } = useDragAndDrop({
@@ -185,7 +188,7 @@ function WorkflowEditorInner() {
         );
 
         try {
-            const resultNodes = await executeWorkflow(nodes, edges);
+            const resultNodes = await executeWorkflow(nodes, edges, variableContext);
             if (resultNodes) {
                 setNodes((nds) =>
                     nds.map((node) => {
@@ -212,7 +215,7 @@ function WorkflowEditorInner() {
                 }))
             );
         }
-    }, [nodes, edges, setNodes, executeWorkflow]);
+    }, [nodes, edges, setNodes, executeWorkflow, variableContext]);
 
     return (
         <div className="flex flex-col h-full w-full">

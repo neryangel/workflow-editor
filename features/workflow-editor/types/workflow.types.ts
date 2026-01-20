@@ -31,6 +31,7 @@ export interface Workflow {
 export interface RunWorkflowRequest {
   nodes: WorkflowNode[];
   edges: WorkflowEdge[];
+  variables?: Record<string, string | number | boolean>;
 }
 
 export interface RunWorkflowResponse {
