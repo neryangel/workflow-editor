@@ -8,7 +8,7 @@ import { NodeData } from '../../../types';
 import { Loader2, Play, Maximize2, X, Copy, Check } from 'lucide-react';
 
 function LLMNodeComponent({ id, data, selected }: NodeProps) {
-    const { getNodes, setNodes } = useReactFlow();
+    const { getNodes, setNodes, setEdges } = useReactFlow();
     const edges = useEdges();
     const [isRunning, setIsRunning] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -23,6 +23,52 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
             setTimeout(() => setIsCopied(false), 2000);
         }
     }, [outputValue]);
+
+    const handleDelete = useCallback(() => {
+        setNodes((nds) => nds.filter((node) => node.id !== id));
+        setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+    }, [id, setNodes, setEdges]);
+
+    const handleLabelChange = useCallback(
+        (newLabel: string) => {
+            setNodes((nds) =>
+                nds.map((node) => {
+                    if (node.id === id) {
+                        const currentData = node.data as unknown as NodeData;
+                        return {
+                            ...node,
+                            data: {
+                                ...currentData,
+                                label: newLabel,
+                            },
+                        };
+                    }
+                    return node;
+                })
+            );
+        },
+        [id, setNodes]
+    );
+
+    const handleDuplicate = useCallback(() => {
+        const newId = `${id}-copy-${Date.now()}`;
+        setNodes((nds) => {
+            const nodeToDuplicate = nds.find((n) => n.id === id);
+            if (!nodeToDuplicate) return nds;
+
+            const newNode = {
+                ...nodeToDuplicate,
+                id: newId,
+                position: {
+                    x: nodeToDuplicate.position.x + 50,
+                    y: nodeToDuplicate.position.y + 50,
+                },
+                selected: false,
+            };
+
+            return [...nds, newNode];
+        });
+    }, [id, setNodes]);
 
     const getInputsFromConnections = useCallback(() => {
         const inputs: Record<string, unknown> = {};
@@ -183,6 +229,9 @@ function LLMNodeComponent({ id, data, selected }: NodeProps) {
                 status={nodeData.status}
                 error={nodeData.error}
                 selected={selected}
+                onDelete={handleDelete}
+                onLabelChange={handleLabelChange}
+                onDuplicate={handleDuplicate}
             >
                 <div className="flex flex-col gap-3">
                     <div className="relative">
