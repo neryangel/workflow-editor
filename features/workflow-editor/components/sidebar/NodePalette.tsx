@@ -119,6 +119,7 @@ export function NodePalette() {
     return (
         <div
             className={`w-64 h-full bg-slate-950 border-slate-800 flex flex-col ${isRTL ? 'border-l' : 'border-r'}`}
+            suppressHydrationWarning
         >
             {/* Search */}
             <div className="p-3">

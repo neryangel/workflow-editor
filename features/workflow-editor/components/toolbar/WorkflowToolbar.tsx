@@ -4,7 +4,6 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { Node, Edge } from '@xyflow/react';
 import { Save, FolderOpen, Download, Upload, Plus, ChevronDown, Layout } from 'lucide-react';
 import { useWorkflowPersist } from '../../hooks';
-import { LanguageToggle } from '../LanguageToggle';
 
 interface TemplateInfo {
     id: string;
@@ -123,6 +122,17 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
         [importWorkflow, onLoad]
     );
 
+    const getComplexityStyle = (complexity: string) => {
+        switch (complexity) {
+            case 'advanced':
+                return 'bg-purple-500/20 text-purple-300';
+            case 'intermediate':
+                return 'bg-yellow-500/20 text-yellow-300';
+            default:
+                return 'bg-green-500/20 text-green-300';
+        }
+    };
+
     return (
         <div className="flex items-center gap-2 px-3 py-2 bg-slate-900/90 backdrop-blur border-b border-slate-800">
             {/* Workflow Name */}
@@ -134,6 +144,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                    focus:outline-none focus:ring-1 focus:ring-emerald-500 w-48"
                 placeholder="Workflow name..."
             />
+
             {/* File Menu */}
             <div className="relative">
                 <button
@@ -194,6 +205,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                     </div>
                 )}
             </div>
+
             {/* Templates Button */}
             <button
                 onClick={() => setShowTemplates(!showTemplates)}
@@ -204,6 +216,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                 Templates
                 <ChevronDown className="w-3 h-3" />
             </button>
+
             {/* Templates Dropdown */}
             {showTemplates && (
                 <div className="fixed inset-0 z-40" onClick={() => setShowTemplates(false)}>
@@ -232,13 +245,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                                     </div>
                                     <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
                                         <span
-                                            className={`px-1.5 py-0.5 rounded ${
-                                                template.complexity === 'advanced'
-                                                    ? 'bg-purple-500/20 text-purple-300'
-                                                    : template.complexity === 'intermediate'
-                                                      ? 'bg-yellow-500/20 text-yellow-300'
-                                                      : 'bg-green-500/20 text-green-300'
-                                            }`}
+                                            className={`px-1.5 py-0.5 rounded ${getComplexityStyle(template.complexity)}`}
                                         >
                                             {template.complexity}
                                         </span>
@@ -249,7 +256,8 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                         </div>
                     </div>
                 </div>
-            )}{' '}
+            )}
+
             {/* Hidden file input */}
             <input
                 ref={fileInputRef}
@@ -258,12 +266,13 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                 onChange={handleFileChange}
                 className="hidden"
             />
+
             {/* Saved Workflows Dropdown */}
             {showSaved && (
                 <div className="fixed inset-0 z-40" onClick={() => setShowSaved(false)}>
                     <div
                         className="absolute top-16 left-64 w-72 bg-slate-800 border border-slate-700 
-                       rounded-lg shadow-xl p-2 max-h-80 overflow-auto"
+                       rounded-lg shadow-xl p-2 max-h-80 overflow-auto z-50"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-xs text-slate-500 px-2 py-1 mb-1">Saved Workflows</div>
@@ -301,12 +310,10 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                     </div>
                 </div>
             )}
+
             {/* Save Status */}
-            <div className="flex items-center gap-3 ml-auto">
-                <LanguageToggle />
-                <div className="text-xs text-slate-500">
-                    {nodes.length} nodes • {edges.length} connections
-                </div>
+            <div className="text-xs text-slate-500 ml-auto">
+                {nodes.length} nodes • {edges.length} connections
             </div>
         </div>
     );

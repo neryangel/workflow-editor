@@ -4,4 +4,3 @@ export * from './sidebar';
 export * from './canvas';
 export * from './toolbar';
 export { HelpPanel } from './HelpPanel';
-export { LanguageToggle } from './LanguageToggle';
