@@ -44,6 +44,47 @@ function InputTextNodeComponent({ id, data, selected }: NodeProps) {
         setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
     }, [id, setNodes, setEdges]);
 
+    const handleLabelChange = useCallback(
+        (newLabel: string) => {
+            setNodes((nds) =>
+                nds.map((node) => {
+                    if (node.id === id) {
+                        const currentData = node.data as unknown as NodeData;
+                        return {
+                            ...node,
+                            data: {
+                                ...currentData,
+                                label: newLabel,
+                            },
+                        };
+                    }
+                    return node;
+                })
+            );
+        },
+        [id, setNodes]
+    );
+
+    const handleDuplicate = useCallback(() => {
+        const newId = `${id}-copy-${Date.now()}`;
+        setNodes((nds) => {
+            const nodeToDuplicate = nds.find((n) => n.id === id);
+            if (!nodeToDuplicate) return nds;
+
+            const newNode = {
+                ...nodeToDuplicate,
+                id: newId,
+                position: {
+                    x: nodeToDuplicate.position.x + 50,
+                    y: nodeToDuplicate.position.y + 50,
+                },
+                selected: false,
+            };
+
+            return [...nds, newNode];
+        });
+    }, [id, setNodes]);
+
     return (
         <BaseNode
             label={nodeData.label}
@@ -51,6 +92,8 @@ function InputTextNodeComponent({ id, data, selected }: NodeProps) {
             error={nodeData.error}
             selected={selected}
             onDelete={handleDelete}
+            onLabelChange={handleLabelChange}
+            onDuplicate={handleDuplicate}
         >
             <div className="flex flex-col gap-3">
                 <textarea
