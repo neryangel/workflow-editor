@@ -9,6 +9,11 @@ const MAX_HISTORY_ITEMS = 100; // Keep last 100 executions
 
 // Load initial history from localStorage
 function loadInitialHistory(): ExecutionLog[] {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') {
+        return [];
+    }
+
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
         try {
@@ -65,9 +70,7 @@ export interface UseExecutionHistoryReturn {
     setFilter: (filter: ExecutionFilter) => void;
 
     // Replay
-    replayExecution: (
-        id: string
-    ) => {
+    replayExecution: (id: string) => {
         nodes: WorkflowNode[];
         edges: WorkflowEdge[];
         variables?: Record<string, string | number | boolean>;
@@ -90,6 +93,7 @@ export function useExecutionHistory(): UseExecutionHistoryReturn {
 
     // Save history to localStorage
     const saveToStorage = useCallback((newHistory: ExecutionLog[]) => {
+        if (typeof window === 'undefined') return;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory));
     }, []);
 
@@ -130,7 +134,9 @@ export function useExecutionHistory(): UseExecutionHistoryReturn {
     // Clear all history
     const clearHistory = useCallback(() => {
         setHistory([]);
-        localStorage.removeItem(STORAGE_KEY);
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem(STORAGE_KEY);
+        }
     }, []);
 
     // Delete a specific execution

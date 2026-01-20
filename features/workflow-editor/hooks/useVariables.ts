@@ -12,6 +12,11 @@ function loadInitialState(): {
     variables: Variable[];
     activeSetId: string | null;
 } {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') {
+        return { sets: [], variables: [], activeSetId: null };
+    }
+
     const stored = localStorage.getItem(STORAGE_KEY);
     const activeSet = localStorage.getItem(ACTIVE_SET_KEY);
 
@@ -73,6 +78,8 @@ export function useVariables(): UseVariablesReturn {
 
     // Save variables to localStorage
     const saveToStorage = useCallback((sets: VariableSet[], activeId: string | null) => {
+        if (typeof window === 'undefined') return;
+
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sets));
         if (activeId) {
             localStorage.setItem(ACTIVE_SET_KEY, activeId);
@@ -222,7 +229,9 @@ export function useVariables(): UseVariablesReturn {
             if (set) {
                 setVariables(set.variables);
                 setActiveSetId(setId);
-                localStorage.setItem(ACTIVE_SET_KEY, setId);
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem(ACTIVE_SET_KEY, setId);
+                }
             }
         },
         [variableSets]
