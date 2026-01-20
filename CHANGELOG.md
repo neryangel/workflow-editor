@@ -1,3 +1,9 @@
+# [1.19.0](https://github.com/neryangel/workflow-editor/compare/v1.18.1...v1.19.0) (2026-01-20)
+
+### Features
+
+- add language toggle, fix template z-index ([d71faa6](https://github.com/neryangel/workflow-editor/commit/d71faa6caca424eab78555196505db6fa74b06f5))
+
 ## [1.18.1](https://github.com/neryangel/workflow-editor/compare/v1.18.0...v1.18.1) (2026-01-20)
 
 ### Bug Fixes
