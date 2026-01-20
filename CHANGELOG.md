@@ -1,3 +1,9 @@
+## [1.15.2](https://github.com/neryangel/workflow-editor/compare/v1.15.1...v1.15.2) (2026-01-20)
+
+### Bug Fixes
+
+- integrate keyboard shortcuts (Delete, Select All) in WorkflowCanvas ([4fb9a05](https://github.com/neryangel/workflow-editor/commit/4fb9a05ec7b992643af28fa2c7dda53b81476daf))
+
 ## [1.15.1](https://github.com/neryangel/workflow-editor/compare/v1.15.0...v1.15.1) (2026-01-19)
 
 ### Bug Fixes
