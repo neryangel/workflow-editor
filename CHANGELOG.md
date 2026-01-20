@@ -1,3 +1,9 @@
+## [1.20.1](https://github.com/neryangel/workflow-editor/compare/v1.20.0...v1.20.1) (2026-01-20)
+
+### Bug Fixes
+
+- critical UI bugs - toolbar syntax, missing NodePalette, I18nProvider ([1dfb002](https://github.com/neryangel/workflow-editor/commit/1dfb002ec7a08cbeec9ab31568d486670bab2227))
+
 # [1.20.0](https://github.com/neryangel/workflow-editor/compare/v1.19.0...v1.20.0) (2026-01-20)
 
 ### Features
