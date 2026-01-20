@@ -1,3 +1,9 @@
+# [1.20.0](https://github.com/neryangel/workflow-editor/compare/v1.19.0...v1.20.0) (2026-01-20)
+
+### Features
+
+- professional reactive i18n system with context provider ([89331fc](https://github.com/neryangel/workflow-editor/commit/89331fc53da643178d52a771820b00e55c4899de))
+
 # [1.19.0](https://github.com/neryangel/workflow-editor/compare/v1.18.1...v1.19.0) (2026-01-20)
 
 ### Features
