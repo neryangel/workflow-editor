@@ -222,8 +222,8 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                 <>
                     <div className="fixed inset-0 z-50" onClick={() => setShowTemplates(false)} />
                     <div
-                        className="fixed top-16 left-72 w-96 bg-slate-800 border border-slate-700
-                       rounded-lg shadow-xl p-3 max-h-[70vh] overflow-auto z-[60]"
+                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] bg-slate-800
+                       border border-slate-700 rounded-lg shadow-xl p-4 max-h-[80vh] overflow-auto z-[60]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-sm font-medium text-white mb-3 flex items-center gap-2">
@@ -234,7 +234,12 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                             {templates.map((template) => (
                                 <button
                                     key={template.id}
-                                    onClick={() => handleLoadTemplate(template.file)}
+                                    onClick={(e) => {
+                                        console.log('Template clicked:', template.name);
+                                        e.stopPropagation();
+                                        handleLoadTemplate(template.file);
+                                    }}
+                                    onMouseEnter={() => console.log('Mouse enter:', template.name)}
                                     className="w-full text-left p-3 rounded-lg bg-slate-700/50 hover:bg-slate-700
                              transition-colors border border-transparent hover:border-emerald-500/50"
                                 >
