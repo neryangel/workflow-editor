@@ -1,3 +1,9 @@
+## [1.18.1](https://github.com/neryangel/workflow-editor/compare/v1.18.0...v1.18.1) (2026-01-20)
+
+### Bug Fixes
+
+- update i18n tests to match new translation values ([34272b8](https://github.com/neryangel/workflow-editor/commit/34272b84ab311bccc37d2e8af2603fd88c1acd74))
+
 # [1.18.0](https://github.com/neryangel/workflow-editor/compare/v1.17.0...v1.18.0) (2026-01-20)
 
 ### Features
