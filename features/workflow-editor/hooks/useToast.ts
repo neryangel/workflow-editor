@@ -20,7 +20,7 @@ export function useToast(): UseToastReturn {
 
     const showToast = useCallback(
         (message: string, type: Toast['type'] = 'info', duration: number = 3000) => {
-            const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
             const newToast: Toast = { id, message, type, duration };
 
             setToasts((prev) => [...prev, newToast]);

@@ -235,11 +235,9 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                                 <button
                                     key={template.id}
                                     onClick={(e) => {
-                                        console.log('Template clicked:', template.name);
                                         e.stopPropagation();
                                         handleLoadTemplate(template.file);
                                     }}
-                                    onMouseEnter={() => console.log('Mouse enter:', template.name)}
                                     className="w-full text-left p-3 rounded-lg bg-slate-700/50 hover:bg-slate-700
                              transition-colors border border-transparent hover:border-emerald-500/50"
                                 >

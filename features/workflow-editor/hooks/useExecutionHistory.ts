@@ -1,6 +1,6 @@
 // useExecutionHistory - Hook for managing workflow execution history
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { ExecutionLog, ExecutionFilter, ExecutionStats, ExecutionComparison } from '../types';
 import { WorkflowNode, WorkflowEdge } from '../types';
 
@@ -94,7 +94,12 @@ export function useExecutionHistory(): UseExecutionHistoryReturn {
     // Save history to localStorage
     const saveToStorage = useCallback((newHistory: ExecutionLog[]) => {
         if (typeof window === 'undefined') return;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory));
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory));
+        } catch (error) {
+            console.error('Failed to save execution history to localStorage:', error);
+            // Continue execution - localStorage failure should not break the app
+        }
     }, []);
 
     // Add a new execution to history
@@ -109,7 +114,7 @@ export function useExecutionHistory(): UseExecutionHistoryReturn {
             workflowName?: string
         ) => {
             const execution: ExecutionLog = {
-                id: `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                id: `exec-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                 timestamp: new Date(),
                 duration,
                 status,
@@ -152,33 +157,37 @@ export function useExecutionHistory(): UseExecutionHistoryReturn {
     );
 
     // Filter history
-    const filteredHistory = history.filter((item) => {
-        if (
-            currentFilter.status &&
-            currentFilter.status !== 'all' &&
-            item.status !== currentFilter.status
-        ) {
-            return false;
-        }
-        if (currentFilter.dateFrom && item.timestamp < currentFilter.dateFrom) {
-            return false;
-        }
-        if (currentFilter.dateTo && item.timestamp > currentFilter.dateTo) {
-            return false;
-        }
-        if (currentFilter.workflowId && item.workflowId !== currentFilter.workflowId) {
-            return false;
-        }
-        if (currentFilter.search) {
-            const searchLower = currentFilter.search.toLowerCase();
-            const matchesName = item.workflowName?.toLowerCase().includes(searchLower);
-            const matchesError = item.error?.toLowerCase().includes(searchLower);
-            if (!matchesName && !matchesError) {
-                return false;
-            }
-        }
-        return true;
-    });
+    const filteredHistory = useMemo(
+        () =>
+            history.filter((item) => {
+                if (
+                    currentFilter.status &&
+                    currentFilter.status !== 'all' &&
+                    item.status !== currentFilter.status
+                ) {
+                    return false;
+                }
+                if (currentFilter.dateFrom && item.timestamp < currentFilter.dateFrom) {
+                    return false;
+                }
+                if (currentFilter.dateTo && item.timestamp > currentFilter.dateTo) {
+                    return false;
+                }
+                if (currentFilter.workflowId && item.workflowId !== currentFilter.workflowId) {
+                    return false;
+                }
+                if (currentFilter.search) {
+                    const searchLower = currentFilter.search.toLowerCase();
+                    const matchesName = item.workflowName?.toLowerCase().includes(searchLower);
+                    const matchesError = item.error?.toLowerCase().includes(searchLower);
+                    if (!matchesName && !matchesError) {
+                        return false;
+                    }
+                }
+                return true;
+            }),
+        [history, currentFilter]
+    );
 
     // Replay execution
     const replayExecution = useCallback(
@@ -286,7 +295,31 @@ export function useExecutionHistory(): UseExecutionHistoryReturn {
     const importHistory = useCallback(
         (json: string) => {
             try {
-                const imported = JSON.parse(json) as ExecutionLog[];
+                const parsed = JSON.parse(json);
+                // Convert date strings back to Date objects (same as loadInitialHistory)
+                const imported = parsed.map((item: ExecutionLog & { timestamp: string }) => {
+                    const result: ExecutionLog = {
+                        ...item,
+                        timestamp: new Date(item.timestamp),
+                    };
+
+                    if (item.metadata && item.metadata.dateFrom) {
+                        result.metadata = {
+                            ...item.metadata,
+                            dateFrom: new Date(item.metadata.dateFrom as unknown as string),
+                        };
+                    }
+
+                    if (item.metadata && item.metadata.dateTo) {
+                        result.metadata = {
+                            ...(result.metadata || item.metadata),
+                            dateTo: new Date(item.metadata.dateTo as unknown as string),
+                        };
+                    }
+
+                    return result;
+                });
+
                 setHistory((prev) => {
                     const updated = [...imported, ...prev];
                     const unique = Array.from(

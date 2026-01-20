@@ -1,6 +1,6 @@
 // useVariables - Hook for managing workflow variables
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Variable, VariableSet, VariableType, VariableContext } from '../types';
 
 const STORAGE_KEY = 'workflow-variables';
@@ -80,19 +80,28 @@ export function useVariables(): UseVariablesReturn {
     const saveToStorage = useCallback((sets: VariableSet[], activeId: string | null) => {
         if (typeof window === 'undefined') return;
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(sets));
-        if (activeId) {
-            localStorage.setItem(ACTIVE_SET_KEY, activeId);
-        } else {
-            localStorage.removeItem(ACTIVE_SET_KEY);
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(sets));
+            if (activeId) {
+                localStorage.setItem(ACTIVE_SET_KEY, activeId);
+            } else {
+                localStorage.removeItem(ACTIVE_SET_KEY);
+            }
+        } catch (error) {
+            console.error('Failed to save variables to localStorage:', error);
+            // Continue execution - localStorage failure should not break the app
         }
     }, []);
 
     // Create variable context object for substitution
-    const variableContext: VariableContext = variables.reduce((acc, variable) => {
-        acc[variable.name] = variable.value;
-        return acc;
-    }, {} as VariableContext);
+    const variableContext: VariableContext = useMemo(
+        () =>
+            variables.reduce((acc, variable) => {
+                acc[variable.name] = variable.value;
+                return acc;
+            }, {} as VariableContext),
+        [variables]
+    );
 
     // Add a new variable
     const addVariable = useCallback(
@@ -103,7 +112,7 @@ export function useVariables(): UseVariablesReturn {
             description?: string
         ) => {
             const newVariable: Variable = {
-                id: `var-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                id: `var-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                 name,
                 type,
                 value,
@@ -202,7 +211,7 @@ export function useVariables(): UseVariablesReturn {
     const createVariableSet = useCallback(
         (name: string, description?: string) => {
             const newSet: VariableSet = {
-                id: `set-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                id: `set-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                 name,
                 description,
                 variables: [],
@@ -230,7 +239,11 @@ export function useVariables(): UseVariablesReturn {
                 setVariables(set.variables);
                 setActiveSetId(setId);
                 if (typeof window !== 'undefined') {
-                    localStorage.setItem(ACTIVE_SET_KEY, setId);
+                    try {
+                        localStorage.setItem(ACTIVE_SET_KEY, setId);
+                    } catch (error) {
+                        console.error('Failed to save active set to localStorage:', error);
+                    }
                 }
             }
         },
@@ -271,7 +284,7 @@ export function useVariables(): UseVariablesReturn {
                 const set = JSON.parse(json) as VariableSet;
                 const newSet: VariableSet = {
                     ...set,
-                    id: `set-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    id: `set-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 };

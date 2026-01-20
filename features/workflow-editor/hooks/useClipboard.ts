@@ -44,7 +44,7 @@ export function useClipboard(): UseClipboardReturn {
 
     // Generate unique ID for pasted/duplicated nodes
     const generateUniqueId = (baseId: string) => {
-        return `${baseId}-copy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        return `${baseId}-copy-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     };
 
     // Paste nodes from clipboard
