@@ -1,3 +1,9 @@
+# [1.16.0](https://github.com/neryangel/workflow-editor/compare/v1.15.2...v1.16.0) (2026-01-20)
+
+### Features
+
+- add Templates UI with dropdown gallery ([ed072c7](https://github.com/neryangel/workflow-editor/commit/ed072c73df73260f47fe005422c252f93e430e9e))
+
 ## [1.15.2](https://github.com/neryangel/workflow-editor/compare/v1.15.1...v1.15.2) (2026-01-20)
 
 ### Bug Fixes
