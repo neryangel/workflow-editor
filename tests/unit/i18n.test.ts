@@ -54,14 +54,14 @@ describe('i18n', () => {
     describe('node translations', () => {
         it('should translate node names in English', () => {
             setLocale('en');
-            expect(t('node.llm')).toBe('LLM');
-            expect(t('node.imageGen')).toBe('Image Gen');
+            expect(t('node.llm')).toBe('Gemini 2.5 Flash');
+            expect(t('node.imageGen')).toBe('Nano Banana Pro');
         });
 
         it('should translate node names in Hebrew', () => {
             setLocale('he');
-            expect(t('node.llm')).toBe('מודל שפה');
-            expect(t('node.imageGen')).toBe('יצירת תמונה');
+            expect(t('node.llm')).toBe('Gemini 2.5 Flash');
+            expect(t('node.imageGen')).toBe('Nano Banana Pro');
         });
     });
 
@@ -69,13 +69,13 @@ describe('i18n', () => {
         it('should translate toolbar actions', () => {
             setLocale('en');
             expect(t('toolbar.save')).toBe('Save');
-            expect(t('toolbar.run')).toBe('Run');
+            expect(t('toolbar.run')).toBe('Run all');
         });
 
         it('should translate toolbar actions in Hebrew', () => {
             setLocale('he');
             expect(t('toolbar.save')).toBe('שמור');
-            expect(t('toolbar.run')).toBe('הפעל');
+            expect(t('toolbar.run')).toBe('הפעל הכל');
         });
     });
 });
