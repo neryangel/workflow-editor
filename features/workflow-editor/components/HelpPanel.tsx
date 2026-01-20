@@ -13,7 +13,7 @@ export function HelpPanel() {
             {/* Help Button */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-4 right-4 z-50 p-3 bg-emerald-600 hover:bg-emerald-500 
+                className="fixed bottom-4 right-4 z-30 p-3 bg-emerald-600 hover:bg-emerald-500
                            rounded-full shadow-lg transition-all group"
                 title={t('help.title')}
             >

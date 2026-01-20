@@ -109,9 +109,8 @@ export function NodePalette() {
                 label: t('sidebar.utilities'),
                 color: '#64748b',
             },
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }),
-        [locale]
+        [t, locale]
     );
 
     const categories = ['input', 'models', 'utility'] as const;
