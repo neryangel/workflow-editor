@@ -37,7 +37,7 @@ import {
     OutputNode,
 } from '../nodes';
 import { arePortsCompatible, PORT_COLORS } from '../../constants';
-import { useDragAndDrop, useWorkflowExecution } from '../../hooks';
+import { useDragAndDrop, useWorkflowExecution, useKeyboardShortcuts } from '../../hooks';
 import { NodeData, PortType } from '../../types';
 import { WorkflowRunButton } from './WorkflowRunButton';
 
@@ -100,6 +100,18 @@ function WorkflowEditorInner() {
             },
             [setNodes]
         ),
+    });
+
+    // Keyboard shortcuts - Delete selected nodes, Undo/Redo
+    useKeyboardShortcuts({
+        onDelete: useCallback(() => {
+            setNodes((nds) => nds.filter((node) => !node.selected));
+            setEdges((eds) => eds.filter((edge) => !edge.selected));
+        }, [setNodes, setEdges]),
+        onSelectAll: useCallback(() => {
+            setNodes((nds) => nds.map((node) => ({ ...node, selected: true })));
+            setEdges((eds) => eds.map((edge) => ({ ...edge, selected: true })));
+        }, [setNodes, setEdges]),
     });
 
     // Typed connection validation
