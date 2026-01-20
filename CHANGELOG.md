@@ -1,3 +1,9 @@
+# [1.18.0](https://github.com/neryangel/workflow-editor/compare/v1.17.0...v1.18.0) (2026-01-20)
+
+### Features
+
+- add Hebrew language support with Help Panel ([45d0ccd](https://github.com/neryangel/workflow-editor/commit/45d0ccd3a3dc82c9ca05bcb3c260166b6ddb5708))
+
 # [1.17.0](https://github.com/neryangel/workflow-editor/compare/v1.16.0...v1.17.0) (2026-01-20)
 
 ### Features
