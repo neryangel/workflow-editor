@@ -53,6 +53,12 @@ export class ImageGenExecutor extends BaseExecutor {
             };
         } catch (error) {
             console.error('[ImageGenExecutor] API call failed:', error);
+            console.error('[ImageGenExecutor] Error details:', {
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : undefined,
+                prompt: prompt.substring(0, 50),
+                baseUrl,
+            });
             // Fallback to placeholder on error
             const seed = encodeURIComponent(prompt.slice(0, 30) || 'default');
             return {
