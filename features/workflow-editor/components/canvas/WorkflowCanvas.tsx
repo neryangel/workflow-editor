@@ -37,9 +37,17 @@ import {
     OutputNode,
 } from '../nodes';
 import { arePortsCompatible, PORT_COLORS } from '../../constants';
-import { useDragAndDrop, useWorkflowExecution, useKeyboardShortcuts } from '../../hooks';
+import {
+    useDragAndDrop,
+    useWorkflowExecution,
+    useKeyboardShortcuts,
+    useVariables,
+    useClipboard,
+    useToast,
+} from '../../hooks';
 import { NodeData, PortType } from '../../types';
 import { WorkflowRunButton } from './WorkflowRunButton';
+import { ToastContainer } from '../feedback/ToastContainer';
 
 // Register custom node types - static, outside component
 const nodeTypes: NodeTypes = {
@@ -92,6 +100,15 @@ function WorkflowEditorInner() {
     // Use extracted execution hook with AbortController support
     const { isRunning, executeWorkflow, cancelExecution } = useWorkflowExecution();
 
+    // Use variables hook
+    const { variableContext } = useVariables();
+
+    // Use clipboard hook
+    const { copyNodes, pasteNodes, duplicateNodes } = useClipboard();
+
+    // Use toast notifications
+    const { toasts, showToast, hideToast } = useToast();
+
     // Use extracted drag and drop hook
     const { onDragOver, onDrop } = useDragAndDrop({
         onNodeAdd: useCallback(
@@ -102,16 +119,71 @@ function WorkflowEditorInner() {
         ),
     });
 
-    // Keyboard shortcuts - Delete selected nodes, Undo/Redo
+    // Keyboard shortcuts - Delete, Select All, Copy, Paste, Duplicate
     useKeyboardShortcuts({
         onDelete: useCallback(() => {
+            const selectedCount = nodes.filter((node) => node.selected).length;
             setNodes((nds) => nds.filter((node) => !node.selected));
             setEdges((eds) => eds.filter((edge) => !edge.selected));
-        }, [setNodes, setEdges]),
+            if (selectedCount > 0) {
+                showToast(
+                    `Deleted ${selectedCount} node${selectedCount > 1 ? 's' : ''}`,
+                    'success'
+                );
+            }
+        }, [setNodes, setEdges, nodes, showToast]),
         onSelectAll: useCallback(() => {
             setNodes((nds) => nds.map((node) => ({ ...node, selected: true })));
             setEdges((eds) => eds.map((edge) => ({ ...edge, selected: true })));
-        }, [setNodes, setEdges]),
+            showToast(`Selected ${nodes.length} nodes`, 'info');
+        }, [setNodes, setEdges, nodes.length, showToast]),
+        onCopy: useCallback(() => {
+            const selectedCount = nodes.filter((node) => node.selected).length;
+            if (selectedCount > 0) {
+                copyNodes(nodes, edges);
+                showToast(`Copied ${selectedCount} node${selectedCount > 1 ? 's' : ''}`, 'success');
+            }
+        }, [copyNodes, nodes, edges, showToast]),
+        onPaste: useCallback(() => {
+            const pasted = pasteNodes();
+            if (pasted) {
+                // Deselect all existing nodes
+                setNodes((nds) => [
+                    ...nds.map((node) => ({ ...node, selected: false })),
+                    ...pasted.nodes,
+                ]);
+                setEdges((eds) => [
+                    ...eds.map((edge) => ({ ...edge, selected: false })),
+                    ...pasted.edges,
+                ]);
+                showToast(
+                    `Pasted ${pasted.nodes.length} node${pasted.nodes.length > 1 ? 's' : ''}`,
+                    'success'
+                );
+            } else {
+                showToast('Nothing to paste', 'warning');
+            }
+        }, [pasteNodes, setNodes, setEdges, showToast]),
+        onDuplicate: useCallback(() => {
+            const duplicated = duplicateNodes(nodes, edges);
+            if (duplicated) {
+                // Deselect all existing nodes
+                setNodes((nds) => [
+                    ...nds.map((node) => ({ ...node, selected: false })),
+                    ...duplicated.nodes,
+                ]);
+                setEdges((eds) => [
+                    ...eds.map((edge) => ({ ...edge, selected: false })),
+                    ...duplicated.edges,
+                ]);
+                showToast(
+                    `Duplicated ${duplicated.nodes.length} node${duplicated.nodes.length > 1 ? 's' : ''}`,
+                    'success'
+                );
+            } else {
+                showToast('Select nodes to duplicate', 'warning');
+            }
+        }, [duplicateNodes, nodes, edges, setNodes, setEdges, showToast]),
     });
 
     // Typed connection validation
@@ -185,7 +257,7 @@ function WorkflowEditorInner() {
         );
 
         try {
-            const resultNodes = await executeWorkflow(nodes, edges);
+            const resultNodes = await executeWorkflow(nodes, edges, variableContext);
             if (resultNodes) {
                 setNodes((nds) =>
                     nds.map((node) => {
@@ -212,7 +284,7 @@ function WorkflowEditorInner() {
                 }))
             );
         }
-    }, [nodes, edges, setNodes, executeWorkflow]);
+    }, [nodes, edges, setNodes, executeWorkflow, variableContext]);
 
     return (
         <div className="flex flex-col h-full w-full">
@@ -265,6 +337,9 @@ function WorkflowEditorInner() {
                     </ReactFlow>
                 </div>
             </div>
+
+            {/* Toast notifications */}
+            <ToastContainer toasts={toasts} onDismiss={hideToast} />
         </div>
     );
 }

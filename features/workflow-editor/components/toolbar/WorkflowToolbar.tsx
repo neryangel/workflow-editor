@@ -219,10 +219,11 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
 
             {/* Templates Dropdown */}
             {showTemplates && (
-                <div className="fixed inset-0 z-40" onClick={() => setShowTemplates(false)}>
+                <>
+                    <div className="fixed inset-0 z-50" onClick={() => setShowTemplates(false)} />
                     <div
-                        className="absolute top-16 left-72 w-96 bg-slate-800 border border-slate-700 
-                       rounded-lg shadow-xl p-3 max-h-[70vh] overflow-auto z-50"
+                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] bg-slate-800
+                       border border-slate-700 rounded-lg shadow-xl p-4 max-h-[80vh] overflow-auto z-[60]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-sm font-medium text-white mb-3 flex items-center gap-2">
@@ -233,8 +234,11 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                             {templates.map((template) => (
                                 <button
                                     key={template.id}
-                                    onClick={() => handleLoadTemplate(template.file)}
-                                    className="w-full text-left p-3 rounded-lg bg-slate-700/50 hover:bg-slate-700 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleLoadTemplate(template.file);
+                                    }}
+                                    className="w-full text-left p-3 rounded-lg bg-slate-700/50 hover:bg-slate-700
                              transition-colors border border-transparent hover:border-emerald-500/50"
                                 >
                                     <div className="text-sm font-medium text-white">
@@ -255,7 +259,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                             ))}
                         </div>
                     </div>
-                </div>
+                </>
             )}
 
             {/* Hidden file input */}
@@ -269,10 +273,11 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
 
             {/* Saved Workflows Dropdown */}
             {showSaved && (
-                <div className="fixed inset-0 z-40" onClick={() => setShowSaved(false)}>
+                <>
+                    <div className="fixed inset-0 z-50" onClick={() => setShowSaved(false)} />
                     <div
-                        className="absolute top-16 left-64 w-72 bg-slate-800 border border-slate-700 
-                       rounded-lg shadow-xl p-2 max-h-80 overflow-auto z-50"
+                        className="fixed top-16 left-64 w-72 bg-slate-800 border border-slate-700
+                       rounded-lg shadow-xl p-2 max-h-80 overflow-auto z-[60]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="text-xs text-slate-500 px-2 py-1 mb-1">Saved Workflows</div>
@@ -284,7 +289,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                             savedWorkflows.map((wf) => (
                                 <div
                                     key={wf.id}
-                                    className="flex items-center justify-between px-2 py-2 rounded hover:bg-slate-700 
+                                    className="flex items-center justify-between px-2 py-2 rounded hover:bg-slate-700
                              group cursor-pointer"
                                     onClick={() => handleLoadWorkflow(wf.id)}
                                 >
@@ -299,7 +304,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                                             e.stopPropagation();
                                             deleteWorkflow(wf.id);
                                         }}
-                                        className="opacity-0 group-hover:opacity-100 text-xs text-red-400 
+                                        className="opacity-0 group-hover:opacity-100 text-xs text-red-400
                                hover:text-red-300 px-2 py-1"
                                     >
                                         Delete
@@ -308,7 +313,7 @@ export function WorkflowToolbar({ nodes, edges, onLoad, onClear }: WorkflowToolb
                             ))
                         )}
                     </div>
-                </div>
+                </>
             )}
 
             {/* Save Status */}

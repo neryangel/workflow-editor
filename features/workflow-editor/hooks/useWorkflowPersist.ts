@@ -43,7 +43,7 @@ export interface UseWorkflowPersistReturn {
 }
 
 function generateId(): string {
-    return `wf-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `wf-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 }
 
 function getStoredWorkflows(): SavedWorkflow[] {

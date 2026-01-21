@@ -1,39 +1,46 @@
 'use client';
 
-import { memo, useCallback, useRef } from 'react';
+import { memo, useCallback } from 'react';
 import { NodeProps, useReactFlow } from '@xyflow/react';
 import { BaseNode } from '../base/BaseNode';
 import { HandleRow } from '../base/NodeHandle';
 import { NodeData } from '../../../types';
-import { PORT_COLORS } from '../../../constants';
-import { Upload } from 'lucide-react';
+import { Scissors } from 'lucide-react';
 
-function AudioInputNodeComponent({ id, data, selected }: NodeProps) {
+function TextSplitNodeComponent({ id, data, selected }: NodeProps) {
     const { setNodes, setEdges } = useReactFlow();
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const nodeData = data as unknown as NodeData;
-    const audioUrl = nodeData.outputs?.out_audio?.value as string | undefined;
-    const audioColor = PORT_COLORS.audio;
+    const separator = (nodeData.meta?.separator as string) || '\n';
+    const inputText = nodeData.inputs?.in_text?.value as string | undefined;
+    const outputArray = nodeData.outputs?.out_array?.value as string[] | undefined;
 
-    const handleFileSelect = useCallback(
+    const handleSeparatorChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-
-            const url = URL.createObjectURL(file);
+            const newSeparator = e.target.value;
             setNodes((nds) =>
                 nds.map((node) => {
                     if (node.id === id) {
                         const currentData = node.data as unknown as NodeData;
+
+                        // Process the split immediately
+                        let resultArray: string[] = [];
+                        if (inputText) {
+                            resultArray = inputText.split(newSeparator || '\n');
+                        }
+
                         return {
                             ...node,
                             data: {
                                 ...currentData,
+                                meta: {
+                                    ...currentData.meta,
+                                    separator: newSeparator,
+                                },
                                 outputs: {
                                     ...currentData.outputs,
-                                    out_audio: {
-                                        ...currentData.outputs.out_audio,
-                                        value: url,
+                                    out_array: {
+                                        ...currentData.outputs.out_array,
+                                        value: resultArray,
                                     },
                                 },
                             },
@@ -43,7 +50,7 @@ function AudioInputNodeComponent({ id, data, selected }: NodeProps) {
                 })
             );
         },
-        [id, setNodes]
+        [id, setNodes, inputText]
     );
 
     const handleDelete = useCallback(() => {
@@ -98,39 +105,40 @@ function AudioInputNodeComponent({ id, data, selected }: NodeProps) {
             status={nodeData.status}
             error={nodeData.error}
             selected={selected}
+            icon={<Scissors className="w-4 h-4" />}
             onDelete={handleDelete}
             onLabelChange={handleLabelChange}
             onDuplicate={handleDuplicate}
         >
             <div className="flex flex-col gap-3">
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="audio/*"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                />
-                <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="rounded-lg border-2 border-dashed cursor-pointer p-4 transition-colors"
-                    style={{
-                        borderColor: audioUrl ? `${audioColor}50` : '#334155',
-                        backgroundColor: '#0f172a',
-                    }}
-                >
-                    {audioUrl ? (
-                        <audio src={audioUrl} controls className="w-full" />
-                    ) : (
-                        <div className="text-center">
-                            <Upload className="w-8 h-8 mx-auto mb-2 text-slate-600" />
-                            <p className="text-xs text-slate-500">Click to upload audio</p>
-                        </div>
-                    )}
+                <div className="flex flex-col gap-2">
+                    <label className="text-xs text-slate-400">Separator:</label>
+                    <input
+                        type="text"
+                        value={separator}
+                        onChange={handleSeparatorChange}
+                        placeholder="\n"
+                        className="w-full px-2 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded
+                                 text-slate-200 placeholder-slate-600
+                                 focus:outline-none focus:border-blue-500 transition-colors"
+                    />
                 </div>
-                <HandleRow outputs={[{ id: 'out_audio', type: 'audio', label: 'audio' }]} />
+
+                {outputArray && (
+                    <div className="p-2 rounded text-xs bg-slate-950 border border-slate-800">
+                        <span className="text-slate-400">
+                            {outputArray.length} item{outputArray.length !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+                )}
+
+                <HandleRow
+                    inputs={[{ id: 'in_text', type: 'text', label: 'text' }]}
+                    outputs={[{ id: 'out_array', type: 'text', label: 'array' }]}
+                />
             </div>
         </BaseNode>
     );
 }
 
-export const AudioInputNode = memo(AudioInputNodeComponent);
+export const TextSplitNode = memo(TextSplitNodeComponent);
