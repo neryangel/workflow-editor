@@ -103,16 +103,66 @@ export function useClipboard(): UseClipboardReturn {
         [clipboard]
     );
 
-    // Duplicate selected nodes (copy + paste in one operation)
+    // Duplicate selected nodes without clipboard dependency
     const duplicateNodes = useCallback(
         (nodes: Node[], edges: Edge[], offset = DEFAULT_PASTE_OFFSET): ClipboardData | null => {
-            // First copy the selected nodes
-            copyNodes(nodes, edges);
+            const selectedNodes = nodes.filter((node) => node.selected);
+            if (selectedNodes.length === 0) return null;
 
-            // Then immediately paste them
-            return pasteNodes(offset);
+            const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
+            const selectedEdges = edges.filter(
+                (edge) => selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)
+            );
+
+            // Create ID mapping for new nodes
+            const idMap = new Map<string, string>();
+
+            // Clone nodes with new IDs and offset positions
+            const newNodes = selectedNodes.map((node) => {
+                const newId = generateUniqueId(node.id);
+                idMap.set(node.id, newId);
+
+                return {
+                    ...node,
+                    id: newId,
+                    position: {
+                        x: node.position.x + offset.x,
+                        y: node.position.y + offset.y,
+                    },
+                    selected: true,
+                    data: {
+                        ...node.data,
+                        status: 'idle',
+                        error: undefined,
+                        result: undefined,
+                    },
+                };
+            });
+
+            // Clone edges with updated node IDs
+            const newEdges = selectedEdges
+                .map((edge) => {
+                    const newSourceId = idMap.get(edge.source);
+                    const newTargetId = idMap.get(edge.target);
+
+                    if (!newSourceId || !newTargetId) return null;
+
+                    return {
+                        ...edge,
+                        id: `${newSourceId}-${edge.sourceHandle || 'out'}-${newTargetId}-${edge.targetHandle || 'in'}`,
+                        source: newSourceId,
+                        target: newTargetId,
+                        selected: true,
+                    } as Edge;
+                })
+                .filter((edge): edge is Edge => edge !== null);
+
+            return {
+                nodes: newNodes,
+                edges: newEdges,
+            };
         },
-        [copyNodes, pasteNodes]
+        []
     );
 
     return {

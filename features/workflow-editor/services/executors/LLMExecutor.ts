@@ -27,11 +27,20 @@ export class LLMExecutor extends BaseExecutor {
     ): Promise<ExecutorOutputs> {
         const systemText = (inputs.in_system as string) || '';
         const inputText = (inputs.in_text as string) || '';
-        const imageUrl = (inputs.in_image as string) || undefined;
         const videoUrl = (inputs.in_video as string) || undefined;
         const model = (meta?.model as string) || 'gemini-2.0-flash';
         const personaId = (meta?.personaId as string) || undefined;
         const baseUrl = getApiBaseUrl();
+
+        // Support multiple image inputs for character reference
+        const imageUrls: string[] = [];
+        if (inputs.in_image) imageUrls.push(inputs.in_image as string);
+        if (inputs.in_image_1) imageUrls.push(inputs.in_image_1 as string);
+        if (inputs.in_image_2) imageUrls.push(inputs.in_image_2 as string);
+        if (inputs.in_image_3) imageUrls.push(inputs.in_image_3 as string);
+
+        // Backward compatibility: single imageUrl
+        const imageUrl = imageUrls.length === 1 ? imageUrls[0] : undefined;
 
         if (!inputText) {
             return {
@@ -48,6 +57,7 @@ export class LLMExecutor extends BaseExecutor {
                     prompt: inputText,
                     systemPrompt: systemText || undefined,
                     imageUrl,
+                    imageUrls: imageUrls.length > 1 ? imageUrls : undefined,
                     videoUrl,
                     model,
                     personaId,

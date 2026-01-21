@@ -11,6 +11,8 @@ import {
     VideoGenExecutor,
     InputExecutor,
     ExtractFrameExecutor,
+    OutputExecutor,
+    VariableExecutor,
     ExecutorInputs,
 } from '../executors';
 
@@ -32,6 +34,8 @@ export class WorkflowEngine {
         const imageGenExecutor = new ImageGenExecutor();
         const videoGenExecutor = new VideoGenExecutor();
         const extractFrameExecutor = new ExtractFrameExecutor();
+        const outputExecutor = new OutputExecutor();
+        const variableExecutor = new VariableExecutor();
 
         // Input nodes
         this.executors.set('inputText', inputExecutor);
@@ -47,6 +51,11 @@ export class WorkflowEngine {
         this.executors.set('extractFrame', extractFrameExecutor);
         this.executors.set('upscaler', imageGenExecutor); // Reuse for now
         this.executors.set('audioGen', inputExecutor); // Placeholder
+
+        // Utility nodes
+        this.executors.set('output', outputExecutor);
+        this.executors.set('variable', variableExecutor);
+        this.executors.set('comment', inputExecutor); // Comments don't execute, just pass through
     }
 
     registerExecutor(type: WorkflowNodeType, executor: BaseExecutor): void {
